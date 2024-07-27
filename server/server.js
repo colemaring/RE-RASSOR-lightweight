@@ -1,7 +1,7 @@
 const WebSocket = require("ws");
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 80;
 
 app.use(express.static("dist"));
 
@@ -13,7 +13,7 @@ app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
 // websocket server
-const wss = new WebSocket.Server({ port: 80 });
+const wss = new WebSocket.Server({ port: 8080 });
 //try 443?
 
 let connectedClients = [];
