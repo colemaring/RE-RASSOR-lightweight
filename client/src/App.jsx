@@ -7,7 +7,7 @@ import { useState } from "react";
 function App() {
   const [connected, setConnected] = useState(null);
   // Establish WebSocket connection
-  const wsUrl = "ws://localhost:8080";
+  const wsUrl = "ws://161.35.13.104:8080";
   const ws = new WebSocket(wsUrl);
 
   return (
