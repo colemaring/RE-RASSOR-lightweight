@@ -3,7 +3,8 @@
 #include <AccelStepper.h>
 #include <ArduinoJson.h>
 
-const char* ssid = "Wokwi-GUEST";
+const char* ssid = "helloworld";
+const char* password = "12341234";
 const char* host = "161.35.13.104";
 const uint16_t port = 8080;
 const char* url = "/?name=esp321";
@@ -13,20 +14,21 @@ WiFiClient client;
 WebSocketsClient ws;
 
 // Stepper motor settings
-const int motorEnablePin = 8;
-const int motorStepPin = 9;
-const int motorDirPin = 10;
-const int motorSpeed = 1000; // steps per second
+#define dirPin 15
+#define stepPin 2
+#define motorInterfaceType 1
 
-AccelStepper stepper(1, motorStepPin, motorDirPin);
+// Create a new instance of the AccelStepper class:
+AccelStepper stepper = AccelStepper(motorInterfaceType, stepPin, dirPin);
 
 bool motorRunning = false;
+const int motorSpeed = 500; // Adjust this value as needed
 
 void setup() {
   Serial.begin(115200);
 
   // Connect to Wi-Fi
-  WiFi.begin(ssid);
+  WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.println("Connecting to WiFi...");
@@ -37,12 +39,7 @@ void setup() {
   ws.begin(host, port, url, protocol);
   ws.onEvent(onWsEvent);
 
-  // Initialize stepper motor
-  stepper.setEnablePin(motorEnablePin);
-  stepper.setPinsInverted(false, false, true);
-  stepper.setCurrentPosition(0);
-  stepper.setMaxSpeed(motorSpeed);
-  stepper.setAcceleration(motorSpeed);
+  stepper.setMaxSpeed(1000);
 }
 
 void loop() {
@@ -55,6 +52,9 @@ void loop() {
 
 void onWsEvent(WStype_t type, uint8_t* payload, size_t length) {
   switch (type) {
+    case WStype_DISCONNECTED:
+      Serial.println("Disconnected from WebSocket server");
+      break;
     case WStype_CONNECTED:
       Serial.println("Connected to WebSocket server");
       ws.sendTXT("{\"type\":\"getConnectedClients\"}");
@@ -65,24 +65,22 @@ void onWsEvent(WStype_t type, uint8_t* payload, size_t length) {
 
       // Parse JSON message from server
       DynamicJsonDocument jsonDoc(2048);
-      jsonDoc.parse((char*)payload);
+      deserializeJson(jsonDoc, (char*)payload);
 
       if (jsonDoc.containsKey("type") && jsonDoc["type"] == "move") {
         String direction = jsonDoc["direction"];
+        Serial.print("parsed " +  direction);
 
-        if (direction == "forwards") {
+        if (direction == "forward") {
           stepper.setSpeed(motorSpeed);
           motorRunning = true;
-        } else if (direction == "backwards") {
+        } else if (direction == "backward") {
           stepper.setSpeed(-motorSpeed);
           motorRunning = true;
         } else if (direction == "stop") {
           motorRunning = false;
         }
       }
-      break;
-    case WStype_DISCONNECTED:
-      Serial.println("Disconnected from WebSocket server");
       break;
   }
 }
