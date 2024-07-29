@@ -3,13 +3,18 @@ import React from "react";
 function Status({ connected }) {
   if (connected != null) {
     return (
-      <div style={{ color: "green", fontWeight: "bold" }}>
-        Connected to {connected}
-      </div>
-    );
-  } else {
-    return (
-      <div style={{ color: "red", fontWeight: "bold" }}>Not Connected</div>
+      <>
+        <div
+          style={{
+            color: "green",
+            fontWeight: "bold",
+            marginBottom: "0.5rem",
+          }}
+        >
+          Connected to {connected}.
+        </div>
+        Refresh to disconnect.
+      </>
     );
   }
 }

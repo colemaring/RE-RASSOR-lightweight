@@ -9,6 +9,13 @@ function Controller({ connected, ws }) {
     );
   };
 
+  const handleStop = () => {
+    console.log("Stop button clicked");
+    ws.send(
+      JSON.stringify({ rover: connected, type: "move", direction: "stop" })
+    );
+  };
+
   const handleBackward = () => {
     console.log("Backward button clicked");
     ws.send(
@@ -19,10 +26,13 @@ function Controller({ connected, ws }) {
   return (
     <div className="controller">
       <Button onClick={handleForward} disabled={!connected}>
-        Forward
+        Forward <i class="fa-solid fa-arrow-up"></i>
+      </Button>
+      <Button onClick={handleStop} disabled={!connected} variant="danger">
+        Stop <i class="fa-solid fa-stop"></i>
       </Button>
       <Button onClick={handleBackward} disabled={!connected}>
-        Backward
+        Backward <i class="fa-solid fa-arrow-down"></i>
       </Button>
     </div>
   );
