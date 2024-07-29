@@ -23,7 +23,6 @@ wss.on("connection", (ws, req) => {
   const query = req.url.split("?")[1];
   const params = new URLSearchParams(query);
   const name = params.get("name");
-  console.log(`Client connected: ${name}`);
 
   // Store the client name
   ws.clientName = name;
@@ -31,6 +30,7 @@ wss.on("connection", (ws, req) => {
   // null name is broswer client, which shouldnt be added to list
   if (name != null || name == "") {
     connectedClients.push(name);
+    console.log(`Client connected: ${name}`);
   }
 
   // Broadcast connected clients to all connected clients
@@ -87,6 +87,7 @@ wss.on("connection", (ws, req) => {
   ws.on("close", () => {
     // Remove client name from the array
     connectedClients = connectedClients.filter((client) => client !== name);
+    console.log(`Client disconnected: ${name}`);
     console.log(`Connected clients: ${connectedClients}`);
 
     // Broadcast connected clients to all connected clients
