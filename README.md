@@ -9,5 +9,9 @@ turning buttons <br>
 design button hold and release system <br>
  - message only sent on initial pressdown of button and release, no need for constant sending <br>
 
+# Current UI
+ ![Screenshot 2024-08-07 152919](https://github.com/user-attachments/assets/8a0c63d5-a183-4b93-bc53-5b4104ce17ba)
+
+
 # Wiring Diagram
 ![Screenshot 2024-08-07 152440](https://github.com/user-attachments/assets/7f3dbc7d-6eaa-4e81-8bc7-af5b122c754c)
