@@ -13,6 +13,14 @@ A React &amp; Node web-app which uses WebSockets to communicate with an internet
 # Wiring Diagram
 ![Screenshot 2024-08-07 152440](https://github.com/user-attachments/assets/7f3dbc7d-6eaa-4e81-8bc7-af5b122c754c)
 
+# Electronics
+ - ESP32 <br>
+ - 4x A4988 motor drivers <br>
+ - 4x Nema 17 stepper motors <br>
+ - 12v power source <br>
+ - 12v to 5v converter or buck converter <br>
+ - wires <br>
+
 
 # TODO:
 work on 4 wheel independent motor drivers <br>
