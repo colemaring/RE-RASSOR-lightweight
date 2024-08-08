@@ -12,7 +12,7 @@ A React &amp; Node web-app which uses WebSockets to communicate with an internet
 
 
 # Wiring Diagram
-![Screenshot 2024-08-07 222315](https://github.com/user-attachments/assets/00a1333a-618f-4f62-a47f-ced634cb9e27)
+![Screenshot 2024-08-08 154322](https://github.com/user-attachments/assets/441791af-02cb-44a3-95f1-9d0cbf0647d0)
 
 
 
