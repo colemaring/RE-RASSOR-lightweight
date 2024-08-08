@@ -34,37 +34,38 @@ wss.on("connection", (ws, req) => {
   }
 
   // Set up ping interval
-  const pingIntervalId = setInterval(() => {
-    ws.ping();
-    ws.pingTimeoutId = setTimeout(() => {
-      if (
-        ws.readyState === WebSocket.OPEN &&
-        connectedClients.includes(ws.clientName)
-      ) {
-        // Client didn't respond to ping, remove from connected clients
-        connectedClients = connectedClients.filter(
-          (client) => client !== ws.clientName
-        );
-        console.log(`Client disconnected (unresponsive): ${ws.clientName}`);
-        wss.clients.forEach((client) => {
-          if (client !== ws && client.readyState === WebSocket.OPEN) {
-            client.send(
-              JSON.stringify({
-                type: "connectedClients",
-                clients: connectedClients,
-              })
-            );
-          }
-        });
-        clearInterval(pingIntervalId); // Stop the ping interval
-      }
-    }, 2000);
-  }, 1000);
+const pingIntervalId = setInterval(() => {
+  ws.ping();
+  ws.pingTimeoutId = setTimeout(() => {
+    if (
+      ws.readyState === WebSocket.OPEN &&
+      connectedClients.includes(ws.clientName)
+    ) {
+      // Client didn't respond to ping, remove from connected clients and terminate connection
+      connectedClients = connectedClients.filter(
+        (client) => client !== ws.clientName
+      );
+      console.log(`Client disconnected (unresponsive): ${ws.clientName}`);
+      wss.clients.forEach((client) => {
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
+          client.send(
+            JSON.stringify({
+              type: "connectedClients",
+              clients: connectedClients,
+            })
+          );
+        }
+      });
+      ws.terminate(); // Terminate the connection
+      clearInterval(pingIntervalId); // Stop the ping interval
+    }
+  }, 2000);
+}, 1000);
 
-  // Handle pong response
-  ws.on("pong", () => {
-    clearTimeout(ws.pingTimeoutId);
-  });
+// Handle pong response
+ws.on("pong", () => {
+  clearTimeout(ws.pingTimeoutId);
+});
 
   // Broadcast connected clients to all connected clients
   wss.clients.forEach((client) => {
