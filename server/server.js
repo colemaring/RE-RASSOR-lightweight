@@ -66,13 +66,6 @@ wss.on("connection", (ws, req) => {
     clearTimeout(ws.pingTimeoutId);
   });
 
-  // Handle pong response
-  ws.on("pong", () => {
-    clearTimeout(ws.pingTimeoutId);
-  });
-
-  
-
   // Broadcast connected clients to all connected clients
   wss.clients.forEach((client) => {
     if (client !== ws && client.readyState === WebSocket.OPEN) {
@@ -126,7 +119,7 @@ wss.on("connection", (ws, req) => {
   // Handle client disconnection
   ws.on("close", () => {
     // Remove client name from the array
-    connectedClients = connectedClients.filter((client) => client !== name);
+    connectedClients = connectedClients.filter((client) => client !== ws.clientName);
     console.log(`Client disconnected: ${name}`);
     console.log(`Connected clients: ${connectedClients}`);
 
@@ -143,31 +136,12 @@ wss.on("connection", (ws, req) => {
     });
   });
 
-  // Handle client disconnection
-  ws.on("disconnect", () => {
-    // Remove client name from the array
-    connectedClients = connectedClients.filter((client) => client !== name);
-    console.log(`Client disconnected: ${name}`);
-    console.log(`Connected clients: ${connectedClients}`);
-
-    // Broadcast connected clients to all connected clients
-    wss.clients.forEach((client) => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(
-          JSON.stringify({
-            type: "connectedClients",
-            clients: connectedClients,
-          })
-        );
-      }
-    });
-  });
 
   // Handle client errors
   ws.on("error", (error) => {
     console.error("Client error:", error);
     // Remove client name from the array
-    connectedClients = connectedClients.filter((client) => client !== name);
+    connectedClients = connectedClients.filter((client) => client !== ws.clientName);
     console.log(`Connected clients: ${connectedClients}`);
 
     // Broadcast connected clients to all connected clients
