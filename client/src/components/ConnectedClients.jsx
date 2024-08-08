@@ -26,6 +26,12 @@ const ConnectedClients = ({ setConnected, connected, ws }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!clients.includes(connected)) {
+      setConnected(null);
+    }
+  }, [clients, connected]);
+
   const handleConnect = (client) => {
     console.log(`Connecting to ${client}`);
     setConnected(client);
