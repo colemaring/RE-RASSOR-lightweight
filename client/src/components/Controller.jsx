@@ -23,16 +23,38 @@ function Controller({ connected, ws }) {
     );
   };
 
+  const handleLeft = () => {
+    console.log("Left button clicked");
+    ws.send(
+      JSON.stringify({ rover: connected, type: "move", direction: "left" })
+    );
+  };
+
+  const handleRight = () => {
+    console.log("Right button clicked");
+    ws.send(
+      JSON.stringify({ rover: connected, type: "move", direction: "right" })
+    );
+  };
+
   return (
     <div className="controller">
       <Button onClick={handleForward} disabled={!connected}>
-        Forward <i class="fa-solid fa-arrow-up"></i>
+        Forward <i className="fa-solid fa-arrow-up"></i>
       </Button>
-      <Button onClick={handleStop} disabled={!connected} variant="danger">
-        Stop <i class="fa-solid fa-stop"></i>
-      </Button>
+      <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+        <Button onClick={handleLeft} disabled={!connected}>
+          Left <i className="fa-solid fa-arrow-left"></i>
+        </Button>
+        <Button onClick={handleStop} disabled={!connected} variant="danger">
+          Stop <i className="fa-solid fa-stop"></i>
+        </Button>
+        <Button onClick={handleRight} disabled={!connected}>
+          Right <i className="fa-solid fa-arrow-right"></i>
+        </Button>
+      </div>
       <Button onClick={handleBackward} disabled={!connected}>
-        Backward <i class="fa-solid fa-arrow-down"></i>
+        Backward <i className="fa-solid fa-arrow-down"></i>
       </Button>
     </div>
   );
