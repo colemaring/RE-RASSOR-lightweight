@@ -24,6 +24,15 @@ wss.on("connection", (ws, req) => {
   const params = new URLSearchParams(query);
   const name = params.get("name");
 
+  // Store the client name
+  ws.clientName = name;
+
+  // null name is broswer client, which shouldnt be added to list
+  if (name != null || name == "") {
+    connectedClients.push(name);
+    console.log(`Client connected: ${name}`);
+  }
+
   // Set up ping interval
   const pingIntervalId = setInterval(() => {
     ws.ping();
@@ -62,14 +71,7 @@ wss.on("connection", (ws, req) => {
     clearTimeout(ws.pingTimeoutId);
   });
 
-  // Store the client name
-  ws.clientName = name;
-
-  // null name is broswer client, which shouldnt be added to list
-  if (name != null || name == "") {
-    connectedClients.push(name);
-    console.log(`Client connected: ${name}`);
-  }
+  
 
   // Broadcast connected clients to all connected clients
   wss.clients.forEach((client) => {
