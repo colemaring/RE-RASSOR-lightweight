@@ -26,7 +26,6 @@ Assembly documentation: https://docs.google.com/document/d/1jhzQ0pJI8P-jmU7yeFxD
 # TODO:
 work on 4 wheel independent motor drivers <br>
 handle concurrent connections to same rover or independent rovers <br>
-solve ungraceful disconnect so server knows when client disconnects <br>
 speed slider <br>
 turning buttons <br>
 design button hold and release system <br>
