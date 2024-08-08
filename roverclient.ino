@@ -3,8 +3,8 @@
 #include <AccelStepper.h>
 #include <ArduinoJson.h>
 
-const char *ssid = "helloworld";
-const char *password = "12341234";
+const char* ssid = "Wokwi-GUEST";
+const char *password = "";
 const char *host = "161.35.13.104";
 const uint16_t port = 8080;
 const char *url = "/?name=esp321";
@@ -31,6 +31,9 @@ AccelStepper stepperRR = AccelStepper(motorInterfaceType, stepPinRearRight, dirP
 
 bool motorRunning = false;
 const int motorSpeed = 500;
+
+unsigned long lastConnectionCheck = 0;
+const unsigned long connectionCheckInterval = 5000; // 5 seconds
 
 void setup()
 {
@@ -65,6 +68,15 @@ void loop()
     stepperFR.runSpeed();
     stepperRL.runSpeed();
     stepperRR.runSpeed();
+  }
+  if (millis() - lastConnectionCheck >= connectionCheckInterval)
+  {
+    lastConnectionCheck = millis();
+    if (!ws.isConnected())
+    {
+      Serial.println("Connection lost, attempting to reconnect...");
+      ws.begin(host, port, url, protocol);
+    }
   }
 }
 
