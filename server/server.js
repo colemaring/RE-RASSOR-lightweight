@@ -24,6 +24,44 @@ wss.on("connection", (ws, req) => {
   const params = new URLSearchParams(query);
   const name = params.get("name");
 
+  // Set up ping interval
+  const pingIntervalId = setInterval(() => {
+    ws.ping();
+    ws.pingTimeoutId = setTimeout(() => {
+      if (
+        ws.readyState === WebSocket.OPEN &&
+        connectedClients.includes(ws.clientName)
+      ) {
+        // Client didn't respond to ping, remove from connected clients
+        connectedClients = connectedClients.filter(
+          (client) => client !== ws.clientName
+        );
+        console.log(`Client disconnected (unresponsive): ${ws.clientName}`);
+        wss.clients.forEach((client) => {
+          if (client !== ws && client.readyState === WebSocket.OPEN) {
+            client.send(
+              JSON.stringify({
+                type: "connectedClients",
+                clients: connectedClients,
+              })
+            );
+          }
+        });
+        clearInterval(pingIntervalId); // Stop the ping interval
+      }
+    }, 2000);
+  }, 1000);
+
+  // Handle pong response
+  ws.on("pong", () => {
+    clearTimeout(ws.pingTimeoutId);
+  });
+
+  // Handle pong response
+  ws.on("pong", () => {
+    clearTimeout(ws.pingTimeoutId);
+  });
+
   // Store the client name
   ws.clientName = name;
 
@@ -85,6 +123,26 @@ wss.on("connection", (ws, req) => {
 
   // Handle client disconnection
   ws.on("close", () => {
+    // Remove client name from the array
+    connectedClients = connectedClients.filter((client) => client !== name);
+    console.log(`Client disconnected: ${name}`);
+    console.log(`Connected clients: ${connectedClients}`);
+
+    // Broadcast connected clients to all connected clients
+    wss.clients.forEach((client) => {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(
+          JSON.stringify({
+            type: "connectedClients",
+            clients: connectedClients,
+          })
+        );
+      }
+    });
+  });
+
+  // Handle client disconnection
+  ws.on("disconnect", () => {
     // Remove client name from the array
     connectedClients = connectedClients.filter((client) => client !== name);
     console.log(`Client disconnected: ${name}`);
