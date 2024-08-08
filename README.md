@@ -12,7 +12,8 @@ A React &amp; Node web-app which uses WebSockets to communicate with an internet
 
 
 # Wiring Diagram
-![Screenshot 2024-08-07 152440](https://github.com/user-attachments/assets/7f3dbc7d-6eaa-4e81-8bc7-af5b122c754c)
+![Screenshot 2024-08-07 214630](https://github.com/user-attachments/assets/a4e5e423-363b-4812-a5ee-5ec7a1679285)
+
 
 # Electronics
  - ESP32 <br>
