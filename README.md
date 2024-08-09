@@ -7,13 +7,16 @@ A React &amp; Node web-app which uses WebSockets to communicate with an internet
 - No need to setup and configure the Raspberry Pi, just flash the esp32, enter wifi credentials, name your rover, and you're done <br
 - Can handle multiple concurrent connections to the same rover or independent rovers <br>
 
+# Demo (WIP)
+![rovervid](https://github.com/user-attachments/assets/94a0e8aa-6b02-4dfe-904e-9230c7cfa464)
+
+
 # Current UI
 ![Screenshot 2024-08-08 155605](https://github.com/user-attachments/assets/68521e46-437e-4adb-a106-f6c1c0f90400)
 
 
 # Wiring Diagram
-![Screenshot 2024-08-08 154322](https://github.com/user-attachments/assets/441791af-02cb-44a3-95f1-9d0cbf0647d0)
-
+![Screenshot 2024-08-09 131836](https://github.com/user-attachments/assets/acc93fce-45c7-4669-a0e9-b46a1a0db585)
 
 
 # Electronics
