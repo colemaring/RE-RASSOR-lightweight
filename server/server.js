@@ -48,6 +48,15 @@ const pingIntervalId = setInterval(() => {
         (client) => client !== ws.clientName
       );
       console.log(`Client disconnected (unresponsive): ${ws.clientName}`);
+
+      // Terminate all clients with the same name
+      wss.clients.forEach((client) => {
+        if (client.clientName === ws.clientName) {
+          client.terminate();
+        }
+      });
+
+      // Broadcast connected clients to all connected clients
       wss.clients.forEach((client) => {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(
@@ -58,7 +67,6 @@ const pingIntervalId = setInterval(() => {
           );
         }
       });
-      ws.terminate(); // Terminate the connection
       clearInterval(pingIntervalId); // Stop the ping interval
     }
   }, 2000);
@@ -125,6 +133,12 @@ ws.on("pong", () => {
     connectedClients = connectedClients.filter((client) => client !== ws.clientName);
     console.log(`Client disconnected: ${name}`);
     console.log(`Connected clients: ${connectedClients}`);
+
+     wss.clients.forEach((client) => {
+    if (client.clientName === ws.clientName && client !== ws) {
+      client.terminate();
+    }
+  });
 
     // Broadcast connected clients to all connected clients
     wss.clients.forEach((client) => {
