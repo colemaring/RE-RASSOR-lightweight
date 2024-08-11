@@ -29,9 +29,11 @@ wss.on("connection", (ws, req) => {
 
   // null name is broswer client, which shouldnt be added to list
   if (name != null || name == "") {
-    connectedClients.push(name);
-    console.log(`Client connected: ${name}`);
-  }
+    if (!connectedClients.includes(name)) {
+      connectedClients.push(name);
+    }
+  console.log(`Client connected: ${name}`);
+}
 
   // Set up ping interval
 const pingIntervalId = setInterval(() => {
