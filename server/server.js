@@ -161,4 +161,4 @@ ws.on("pong", () => {
   });
 });
 
-console.log("WebSocket server listening on port 80");
+console.log("WebSocket server listening on port 8080");
