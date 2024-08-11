@@ -30,8 +30,8 @@ A React &amp; Node web-app which uses WebSockets to communicate with an internet
 Assembly documentation: https://docs.google.com/document/d/1jhzQ0pJI8P-jmU7yeFxD81gAwapxjM90a2alEfP4OI4/edit#heading=h.j3emiwso5d2c <br>
 
 # TODO:
-work on 4 wheel independent motor drivers <br>
-turning buttons <br>
+replace a4988 drivers with tmc2208 drivers <br>
+fix turning and backwards <br> 
 speed slider <br>
 video feed <br>
 design button hold and release system? better UX? <br>
