@@ -1,1 +1,1 @@
-A node and websockets server
+Express and websockets server running on Node
