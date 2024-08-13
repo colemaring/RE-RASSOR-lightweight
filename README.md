@@ -29,6 +29,15 @@ A React &amp; Node web-app which uses WebSockets to communicate with an internet
 
 Assembly documentation: https://docs.google.com/document/d/1jhzQ0pJI8P-jmU7yeFxD81gAwapxjM90a2alEfP4OI4/edit#heading=h.j3emiwso5d2c <br>
 
+# Server setup:
+install node <br>
+git clone this repo <br>
+cd into rover <br>
+npm install <br>
+run server.js with either node or a node process manager like pm2 <br>
+make sure firewalls arent blocking port 80 or 8080 <br>
+
+
 # TODO:
 replace a4988 drivers with tmc2208 drivers <br>
 speed slider <br>
