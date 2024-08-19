@@ -1,10 +1,10 @@
 #include <WiFi.h>
 #include <WebSocketsClient.h>
-#include <AccelStepper.h>
+#include <TMC2208Stepper.h>  
 #include <ArduinoJson.h>
 
-const char* ssid = "Wokwi-GUEST";
-const char *password = "";
+const char* ssid = "helloworld";
+const char *password = "12341234";
 const char *host = "161.35.13.104";
 const uint16_t port = 8080;
 const char *url = "/?name=esp321";
@@ -22,12 +22,16 @@ WebSocketsClient ws;
 #define stepPinRearLeft 18
 #define dirPinRearRight 21
 #define stepPinRearRight 22
+#define EN_PIN1    13  // LOW: Driver enabled. HIGH: Driver disabled
+#define EN_PIN2    12  // LOW: Driver enabled. HIGH: Driver disabled
+#define EN_PIN3    14  // LOW: Driver enabled. HIGH: Driver disabled
+#define EN_PIN4    27  // LOW: Driver enabled. HIGH: Driver disabled
 #define motorInterfaceType 1
 
-AccelStepper stepperFL = AccelStepper(motorInterfaceType, stepPinFrontLeft, dirPinFrontLeft);
-AccelStepper stepperFR = AccelStepper(motorInterfaceType, stepPinFrontRight, dirPinFrontRight);
-AccelStepper stepperRL = AccelStepper(motorInterfaceType, stepPinRearLeft, dirPinRearLeft);
-AccelStepper stepperRR = AccelStepper(motorInterfaceType, stepPinRearRight, dirPinRearRight);
+TMC2208Stepper driver1 = TMC2208Stepper(&Serial1);
+TMC2208Stepper driver2 = TMC2208Stepper(&Serial1);
+TMC2208Stepper driver3 = TMC2208Stepper(&Serial1);
+TMC2208Stepper driver4 = TMC2208Stepper(&Serial1);
 
 bool motorRunning = false;
 const int motorSpeed = 500;
@@ -38,6 +42,82 @@ const unsigned long connectionCheckInterval = 5000; // 5 seconds
 void setup()
 {
   Serial.begin(115200);
+  driver1.push();
+  driver2.push();
+  driver3.push();
+  driver4.push();
+
+// Setup for driver 1
+pinMode(EN_PIN1, OUTPUT);
+pinMode(stepPinFrontLeft, OUTPUT);
+pinMode(dirPinFrontLeft, OUTPUT);     // Set DIR_PIN as output
+digitalWrite(EN_PIN1, HIGH);   // Disable driver in hardware
+
+driver1.pdn_disable(true);     // Use PDN/UART pin for communication
+driver1.I_scale_analog(false); // Use internal voltage reference
+driver1.rms_current(500);      // Set driver current 500mA
+driver1.toff(2);               // Enable driver in software
+
+digitalWrite(EN_PIN1, LOW);    // Enable driver in hardware
+digitalWrite(dirPinFrontLeft, HIGH);  // Set direction to clockwise (or LOW for counter-clockwise)
+uint32_t data1 = 0;
+Serial.print("DRV_STATUS = 0x");
+driver1.DRV_STATUS(&data1);
+Serial.println(data1, HEX);
+
+// Setup for driver 2
+pinMode(EN_PIN2, OUTPUT);
+pinMode(stepPinFrontRight, OUTPUT);
+pinMode(dirPinFrontRight, OUTPUT);     // Set DIR_PIN as output
+digitalWrite(EN_PIN2, HIGH);   // Disable driver in hardware
+
+driver2.pdn_disable(true);     // Use PDN/UART pin for communication
+driver2.I_scale_analog(false); // Use internal voltage reference
+driver2.rms_current(500);      // Set driver current 500mA
+driver2.toff(2);               // Enable driver in software
+
+digitalWrite(EN_PIN2, LOW);    // Enable driver in hardware
+digitalWrite(dirPinFrontRight, HIGH);  // Set direction to clockwise (or LOW for counter-clockwise)
+uint32_t data2 = 0;
+Serial.print("DRV_STATUS = 0x");
+driver2.DRV_STATUS(&data2);
+Serial.println(data2, HEX);
+
+// Setup for driver 3
+pinMode(EN_PIN3, OUTPUT);
+pinMode(stepPinRearLeft, OUTPUT);
+pinMode(dirPinRearLeft, OUTPUT);     // Set DIR_PIN as output
+digitalWrite(EN_PIN3, HIGH);   // Disable driver in hardware
+
+driver3.pdn_disable(true);     // Use PDN/UART pin for communication
+driver3.I_scale_analog(false); // Use internal voltage reference
+driver3.rms_current(500);      // Set driver current 500mA
+driver3.toff(2);               // Enable driver in software
+
+digitalWrite(EN_PIN3, LOW);    // Enable driver in hardware
+digitalWrite(dirPinRearLeft, HIGH);  // Set direction to clockwise (or LOW for counter-clockwise)
+uint32_t data3 = 0;
+Serial.print("DRV_STATUS = 0x");
+driver3.DRV_STATUS(&data3);
+Serial.println(data3, HEX);
+
+// Setup for driver 4
+pinMode(EN_PIN4, OUTPUT);
+pinMode(stepPinRearRight, OUTPUT);
+pinMode(dirPinRearRight, OUTPUT);     // Set DIR_PIN as output
+digitalWrite(EN_PIN4, HIGH);   // Disable driver in hardware
+
+driver4.pdn_disable(true);     // Use PDN/UART pin for communication
+driver4.I_scale_analog(false); // Use internal voltage reference
+driver4.rms_current(500);      // Set driver current 500mA
+driver4.toff(2);               // Enable driver in software
+
+digitalWrite(EN_PIN4, LOW);    // Enable driver in hardware
+digitalWrite(dirPinRearRight, HIGH);  // Set direction to clockwise (or LOW for counter-clockwise)
+uint32_t data4 = 0;
+Serial.print("DRV_STATUS = 0x");
+driver4.DRV_STATUS(&data4);
+Serial.println(data4, HEX);
 
   // connect to Wi-Fi
   WiFi.begin(ssid, password);
@@ -52,10 +132,7 @@ void setup()
   ws.begin(host, port, url, protocol);
   ws.onEvent(onWsEvent);
 
-  stepperFL.setMaxSpeed(1000);
-  stepperFR.setMaxSpeed(1000);
-  stepperRL.setMaxSpeed(1000);
-  stepperRR.setMaxSpeed(1000);
+  
 }
 
 void loop()
@@ -64,10 +141,12 @@ void loop()
 
   if (motorRunning)
   {
-    stepperFL.runSpeed();
-    stepperFR.runSpeed();
-    stepperRL.runSpeed();
-    stepperRR.runSpeed();
+    // Rotate motors
+    digitalWrite(stepPinFrontLeft, !digitalRead(stepPinFrontLeft));
+    digitalWrite(stepPinFrontRight, !digitalRead(stepPinFrontRight));
+    digitalWrite(stepPinRearLeft, !digitalRead(stepPinRearLeft));
+    digitalWrite(stepPinRearRight, !digitalRead(stepPinRearRight));
+    delayMicroseconds(100);
   }
   if (millis() - lastConnectionCheck >= connectionCheckInterval)
   {
@@ -106,34 +185,34 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
 
       if (direction == "forward")
       {
-        stepperFL.setSpeed(motorSpeed);
-        stepperFR.setSpeed(-motorSpeed);
-        stepperRL.setSpeed(motorSpeed);
-        stepperRR.setSpeed(-motorSpeed);
+        digitalWrite(dirPinFrontLeft, true);  // Set direction
+        digitalWrite(dirPinFrontRight, true);
+        digitalWrite(dirPinRearLeft, true);
+        digitalWrite(dirPinRearRight, true);
         motorRunning = true;
       }
       else if (direction == "backward")
       {
-        stepperFL.setSpeed(-motorSpeed);
-        stepperFR.setSpeed(motorSpeed);
-        stepperRL.setSpeed(-motorSpeed);
-        stepperRR.setSpeed(motorSpeed);
+         digitalWrite(dirPinFrontLeft, false);  // Set direction
+        digitalWrite(dirPinFrontRight, false);
+        digitalWrite(dirPinRearLeft, false);
+        digitalWrite(dirPinRearRight, false);
         motorRunning = true;
       }
       else if (direction == "left")
       {
-        stepperFL.setSpeed(-motorSpeed);
-        stepperFR.setSpeed(-motorSpeed);
-        stepperRL.setSpeed(-motorSpeed);
-        stepperRR.setSpeed(-motorSpeed);
+        digitalWrite(dirPinFrontLeft, false);  // Set direction
+        digitalWrite(dirPinFrontRight, true);
+        digitalWrite(dirPinRearLeft, false);
+        digitalWrite(dirPinRearRight, true);
         motorRunning = true;
       }
       else if (direction == "right")
       {
-        stepperFL.setSpeed(motorSpeed);
-        stepperFR.setSpeed(motorSpeed);
-        stepperRL.setSpeed(motorSpeed);
-        stepperRR.setSpeed(motorSpeed);
+        digitalWrite(dirPinFrontLeft, true);  // Set direction
+        digitalWrite(dirPinFrontRight, false);
+        digitalWrite(dirPinRearLeft, true);
+        digitalWrite(dirPinRearRight, false);
         motorRunning = true;
       }
       else if (direction == "stop")
