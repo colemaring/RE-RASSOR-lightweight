@@ -23,7 +23,7 @@ WebSocketsClient ws;
 #define dirPinRearRight 21
 #define stepPinRearRight 22
 #define EN_PIN1    13  // LOW: Driver enabled. HIGH: Driver disabled
-#define EN_PIN2    12  // LOW: Driver enabled. HIGH: Driver disabled
+#define EN_PIN2    26  // LOW: Driver enabled. HIGH: Driver disabled
 #define EN_PIN3    14  // LOW: Driver enabled. HIGH: Driver disabled
 #define EN_PIN4    27  // LOW: Driver enabled. HIGH: Driver disabled
 #define motorInterfaceType 1
