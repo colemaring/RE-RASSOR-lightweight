@@ -18,8 +18,8 @@ WebSocketsClient ws;
 #define stepPinFrontLeft 2
 #define dirPinFrontRight 4
 #define stepPinFrontRight 5
-#define dirPinRearLeft 19
-#define stepPinRearLeft 18
+#define dirPinRearLeft 18
+#define stepPinRearLeft 19
 #define dirPinRearRight 21
 #define stepPinRearRight 22
 #define EN_PIN1    13  // LOW: Driver enabled. HIGH: Driver disabled
