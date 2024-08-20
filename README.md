@@ -16,7 +16,8 @@ A React &amp; Node web-app which uses WebSockets to communicate with an internet
 
 
 # Wiring Diagram
-![Screenshot 2024-08-09 131836](https://github.com/user-attachments/assets/acc93fce-45c7-4669-a0e9-b46a1a0db585)
+![Screenshot 2024-08-19 201200](https://github.com/user-attachments/assets/0b4eef8c-13d9-4370-a005-9cb728242d76)
+
 
 
 # Electronics
@@ -39,7 +40,6 @@ make sure firewalls arent blocking port 80 or 8080 <br>
 
 
 # TODO:
-replace a4988 drivers with tmc2208 drivers <br>
 speed slider <br>
 video feed <br>
 design button hold and release system? better UX? <br>
