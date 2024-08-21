@@ -7,7 +7,7 @@ const char* ssid = "helloworld";
 const char *password = "12341234";
 const char *host = "161.35.13.104";
 const uint16_t port = 8080;
-const char *url = "/?name=esp321";
+const char *url = "/?name=testrover";
 const char *protocol = "ws";
 
 WiFiClient client;
@@ -18,8 +18,8 @@ WebSocketsClient ws;
 #define stepPinFrontLeft 2
 #define dirPinFrontRight 4
 #define stepPinFrontRight 5
-#define dirPinRearLeft 18
-#define stepPinRearLeft 19
+#define dirPinRearLeft 19
+#define stepPinRearLeft 18
 #define dirPinRearRight 21
 #define stepPinRearRight 22
 #define EN_PIN1    13  // LOW: Driver enabled. HIGH: Driver disabled
@@ -186,33 +186,33 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
       if (direction == "forward")
       {
         digitalWrite(dirPinFrontLeft, true);  // Set direction
-        digitalWrite(dirPinFrontRight, true);
+        digitalWrite(dirPinFrontRight, false);
         digitalWrite(dirPinRearLeft, true);
-        digitalWrite(dirPinRearRight, true);
+        digitalWrite(dirPinRearRight, false);
         motorRunning = true;
       }
       else if (direction == "backward")
       {
          digitalWrite(dirPinFrontLeft, false);  // Set direction
-        digitalWrite(dirPinFrontRight, false);
-        digitalWrite(dirPinRearLeft, false);
-        digitalWrite(dirPinRearRight, false);
-        motorRunning = true;
-      }
-      else if (direction == "left")
-      {
-        digitalWrite(dirPinFrontLeft, false);  // Set direction
         digitalWrite(dirPinFrontRight, true);
         digitalWrite(dirPinRearLeft, false);
         digitalWrite(dirPinRearRight, true);
         motorRunning = true;
       }
+      else if (direction == "left")
+      {
+        digitalWrite(dirPinFrontLeft, false);  // Set direction
+        digitalWrite(dirPinFrontRight, false);
+        digitalWrite(dirPinRearLeft, false);
+        digitalWrite(dirPinRearRight, false);
+        motorRunning = true;
+      }
       else if (direction == "right")
       {
         digitalWrite(dirPinFrontLeft, true);  // Set direction
-        digitalWrite(dirPinFrontRight, false);
+        digitalWrite(dirPinFrontRight, true);
         digitalWrite(dirPinRearLeft, true);
-        digitalWrite(dirPinRearRight, false);
+        digitalWrite(dirPinRearRight, true);
         motorRunning = true;
       }
       else if (direction == "stop")
