@@ -20,7 +20,8 @@ const char* ssid = "yourssid";
 const char *password = "yourpassword";
 const char *url = "/?name=yournamehere";
 ```
-follow [these instructions](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/) to the esp32 board to the IDE <br>
+follow [these instructions](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/) to add esp32 board to the IDE <br>
+plug in the esp32, select esp32 dev module as the board, and select the corresponding com port <br>
 upload the sketch <br>
 
 # Current UI
