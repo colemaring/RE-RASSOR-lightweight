@@ -69,8 +69,8 @@ const pingIntervalId = setInterval(() => {
       });
       clearInterval(pingIntervalId); // Stop the ping interval
     }
-  }, 2000);
-}, 1000);
+  }, 5000);
+}, 5000);
 
 // Handle pong response
 ws.on("pong", () => {
