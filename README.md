@@ -10,7 +10,7 @@ Documentation, assembly, and notes found here: https://docs.google.com/document/
 - Can handle multiple concurrent connections to the same rover or independent rovers <br>
 
 # Demo (WIP)
-![8mb video-TdO-tHYoOn2A (6)](https://github.com/user-attachments/assets/522128e1-d182-45a3-9e05-fb1c37ac3b1c)
+![8mb video-TdO-tHYoOn2A (6)](https://github.com/user-attachments/assets/522128e1-d182-45a3-9e05-fb1c37ac3b1c) <br>
 mp4: https://github.com/user-attachments/assets/91e84594-b29a-45b5-aa9f-1ea17ab2157b
 
 
