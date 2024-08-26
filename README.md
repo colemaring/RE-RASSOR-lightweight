@@ -10,7 +10,10 @@ Documentation, assembly, and notes found here: https://docs.google.com/document/
 - Can handle multiple concurrent connections to the same rover or independent rovers <br>
 
 # Demo (WIP)
-![rovervid](https://github.com/user-attachments/assets/94a0e8aa-6b02-4dfe-904e-9230c7cfa464)
+![8mb video-TdO-tHYoOn2A (6)](https://github.com/user-attachments/assets/522128e1-d182-45a3-9e05-fb1c37ac3b1c)
+mp4: https://github.com/user-attachments/assets/91e84594-b29a-45b5-aa9f-1ea17ab2157b
+
+
 
 # How to use
 download and open roverclient.ino with Arduino IDE <br>
