@@ -3,11 +3,10 @@ A React &amp; Node web-app which uses WebSockets to communicate with an internet
 Documentation, assembly, and notes found here: https://docs.google.com/document/d/1jhzQ0pJI8P-jmU7yeFxD81gAwapxjM90a2alEfP4OI4/edit#heading=h.j3emiwso5d2c <br>
 
 # Features:
-- You dont need to have the rover and the controller on the same wifi network. As long as they both have internet access it will work <br>
-- Sub 100ms latency between button click and stepper action <br>
-- No need for overpowered Raspberry Pi and ROS <br>
-- No need to setup and configure the Raspberry Pi, just flash the esp32, enter wifi credentials, name your rover, and you're done <br>
-- Can handle multiple concurrent connections to the same rover or independent rovers <br>
+- Network agnostic. The controller and rover can be on different wifi networks. <br>
+- Sub 100ms latency between button click and stepper action. <br>
+- Easy setup. Just flash the esp32, enter wifi credentials, name your rover, and you're done. <br>
+- Can handle multiple concurrent connections to the same rover or independent rovers. <br>
 
 # Demo (WIP)
  ![IMG_0235 (3)](https://github.com/user-attachments/assets/b294c53c-f50c-4765-a300-79dbd092510f) <br>
