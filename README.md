@@ -56,6 +56,7 @@ run server.js with either node or a node process manager like pm2 <br>
 make sure firewalls arent blocking port 80 or 8080 <br>
 
 # TODO:
+ws message handler redundancy? <br>
 finish documentation <br>
 speed slider <br>
 video feed <br>
