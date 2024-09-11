@@ -3,6 +3,7 @@ import Controller from "./components/Controller";
 import Status from "./components/Status";
 import ConnectedClients from "./components/ConnectedClients";
 import { useState } from "react";
+import SpeedSlider from "./components/SpeedSlider";
 
 function App() {
   const [connected, setConnected] = useState(null);
@@ -18,6 +19,7 @@ function App() {
         ws={ws}
       />
       <Status connected={connected} />
+      <SpeedSlider connected={connected} ws={ws} />
       <Controller connected={connected} ws={ws} />
     </>
   );
