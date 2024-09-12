@@ -12,8 +12,6 @@ Documentation, assembly, and notes found here: https://docs.google.com/document/
  ![IMG_0235 (3)](https://github.com/user-attachments/assets/b294c53c-f50c-4765-a300-79dbd092510f) <br>
 
 
-
-
 # How to use
 download and open roverclient.ino with Arduino IDE <br>
 change the following variables to match your network, and choose a custom rover name <br>
@@ -40,14 +38,10 @@ upload the sketch <br>
  - 12v to 5v converter or buck converter <br>
  - wires <br>
 
-# Troubleshooting
-todo
-
 # ONLY IF you are to host YOUR OWN server, follow these steps:
 fork this repo <br>
 change the ip in the roverclient.ino file to match the domain or ipv4 of the server your are hosting <br>
-change the ip in App.jsx and rebuild the frontend using npm vite build <br>
- - when you do this move the new dist file into the server folder
+change the ip in App.jsx and rebuild the frontend using npm vite build (when you do this move the new dist file into the server folder) <br>
 install node <br>
 git clone this repo <br>
 cd into rover <br>
@@ -56,7 +50,8 @@ run server.js with either node or a node process manager like pm2 <br>
 make sure firewalls arent blocking port 80 or 8080 <br>
 
 # TODO:
-ws message handler redundancy? <br>
-finish documentation <br>
-speed slider <br>
+test speed sliders and implement better turning <br>
+finish documentation for new drive system <br>
+design custom pcb for esp32 and tmc2208s <br>
+get domain and design home page to host documentation etc. <br>
 video feed <br>
