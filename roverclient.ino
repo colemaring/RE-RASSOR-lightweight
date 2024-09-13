@@ -35,6 +35,8 @@ TMC2208Stepper driver4 = TMC2208Stepper(&Serial1);
 
 bool motorRunning = false;
 double speedMultiplier = 1.0;
+static bool initialized = false;
+static unsigned long currentDelay = 1000;
 
 unsigned long lastConnectionCheck = 0;
 const unsigned long connectionCheckInterval = 5000; // 5 seconds
@@ -139,12 +141,29 @@ void loop()
 
     if (motorRunning)
     {
+        if (!initialized)
+        {
+            currentDelay = 1000;
+            initialized = true;
+        }
+
+        // Calculate the target delay based on the speedMultiplier
+        unsigned long targetDelay = 100 * (3 - speedMultiplier);
+
+        // Accelerate to the target speed
+        if (currentDelay >= targetDelay)
+        {
+            currentDelay -= 1;
+            if (currentDelay < targetDelay)
+                currentDelay = targetDelay;
+        }
+
         // Rotate motors
         digitalWrite(stepPinFrontLeft, !digitalRead(stepPinFrontLeft));
         digitalWrite(stepPinFrontRight, !digitalRead(stepPinFrontRight));
         digitalWrite(stepPinRearLeft, !digitalRead(stepPinRearLeft));
         digitalWrite(stepPinRearRight, !digitalRead(stepPinRearRight));
-        delayMicroseconds(100 * speedMultiplier);
+        delayMicroseconds(currentDelay);
     }
     if (millis() - lastConnectionCheck >= connectionCheckInterval)
     {
@@ -183,46 +202,47 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
 
             if (direction == "forward")
             {
-                digitalWrite(dirPinFrontLeft, true); // Set direction
-                digitalWrite(dirPinFrontRight, false);
-                digitalWrite(dirPinRearLeft, true);
-                digitalWrite(dirPinRearRight, false);
+                digitalWrite(dirPinFrontLeft, false); // Set direction
+                digitalWrite(dirPinFrontRight, true);
+                digitalWrite(dirPinRearLeft, false);
+                digitalWrite(dirPinRearRight, true);
                 motorRunning = true;
             }
             else if (direction == "backward")
             {
-                digitalWrite(dirPinFrontLeft, false); // Set direction
-                digitalWrite(dirPinFrontRight, true);
-                digitalWrite(dirPinRearLeft, false);
-                digitalWrite(dirPinRearRight, true);
-                motorRunning = true;
-            }
-            else if (direction == "left")
-            {
-                digitalWrite(dirPinFrontLeft, false); // Set direction
+                digitalWrite(dirPinFrontLeft, true); // Set direction
                 digitalWrite(dirPinFrontRight, false);
-                digitalWrite(dirPinRearLeft, false);
+                digitalWrite(dirPinRearLeft, true);
                 digitalWrite(dirPinRearRight, false);
                 motorRunning = true;
             }
-            else if (direction == "right")
+            else if (direction == "left")
             {
                 digitalWrite(dirPinFrontLeft, true); // Set direction
                 digitalWrite(dirPinFrontRight, true);
                 digitalWrite(dirPinRearLeft, true);
                 digitalWrite(dirPinRearRight, true);
+                motorRunning = true;
+            }
+            else if (direction == "right")
+            {
+                digitalWrite(dirPinFrontLeft, false); // Set direction
+                digitalWrite(dirPinFrontRight, false);
+                digitalWrite(dirPinRearLeft, false);
+                digitalWrite(dirPinRearRight, false);
                 motorRunning = true;
             }
             else if (direction == "stop")
             {
                 motorRunning = false;
+                initialized = false;
             }
         }
 
         else if (jsonDoc.containsKey("type") && jsonDoc["type"] == "speed")
         {
-            double speed = jsonDoc["speed"].toDouble();
-            Serial.print("parsed " + speed);
+            double speed = jsonDoc["speed"].as<double>();
+            Serial.print("parsed " + String(speed));
             speedMultiplier = speed;
         }
         break;
