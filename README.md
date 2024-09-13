@@ -50,7 +50,8 @@ run server.js with either node or a node process manager like pm2 <br>
 make sure firewalls arent blocking port 80 or 8080 <br>
 
 # TODO:
-test speed sliders and implement better turning <br>
+gear down gearbox even more? <br>
+implement better turning <br>
 finish documentation for new drive system <br>
 design custom pcb for esp32 and tmc2208s <br>
 get domain and design home page to host documentation etc. <br>
