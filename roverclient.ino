@@ -139,7 +139,7 @@ void loop()
     {
         if (!initialized)
         {
-            currentDelay = 2000;
+            currentDelay = 1000;
             initialized = true;
         }
 
@@ -149,7 +149,7 @@ void loop()
         // Accelerate to the target speed
         if (currentDelay >= targetDelay)
         {
-            currentDelay -= 2;
+            currentDelay -= 1;
             if (currentDelay < targetDelay)
                 currentDelay = targetDelay;
         }
