@@ -60,7 +60,6 @@ void setup()
     driver1.rms_current(500);      // Set driver current 500mA
     driver1.toff(2);               // Enable driver in software
 
-    digitalWrite(EN_PIN1, LOW);          // Enable driver in hardware
     digitalWrite(dirPinFrontLeft, HIGH); // Set direction to clockwise (or LOW for counter-clockwise)
     uint32_t data1 = 0;
     Serial.print("DRV_STATUS = 0x");
@@ -78,7 +77,6 @@ void setup()
     driver2.rms_current(500);      // Set driver current 500mA
     driver2.toff(2);               // Enable driver in software
 
-    digitalWrite(EN_PIN2, LOW);           // Enable driver in hardware
     digitalWrite(dirPinFrontRight, HIGH); // Set direction to clockwise (or LOW for counter-clockwise)
     uint32_t data2 = 0;
     Serial.print("DRV_STATUS = 0x");
@@ -96,7 +94,6 @@ void setup()
     driver3.rms_current(500);      // Set driver current 500mA
     driver3.toff(2);               // Enable driver in software
 
-    digitalWrite(EN_PIN3, LOW);         // Enable driver in hardware
     digitalWrite(dirPinRearLeft, HIGH); // Set direction to clockwise (or LOW for counter-clockwise)
     uint32_t data3 = 0;
     Serial.print("DRV_STATUS = 0x");
@@ -114,7 +111,6 @@ void setup()
     driver4.rms_current(500);      // Set driver current 500mA
     driver4.toff(2);               // Enable driver in software
 
-    digitalWrite(EN_PIN4, LOW);          // Enable driver in hardware
     digitalWrite(dirPinRearRight, HIGH); // Set direction to clockwise (or LOW for counter-clockwise)
     uint32_t data4 = 0;
     Serial.print("DRV_STATUS = 0x");
@@ -143,7 +139,7 @@ void loop()
     {
         if (!initialized)
         {
-            currentDelay = 1000;
+            currentDelay = 2000;
             initialized = true;
         }
 
@@ -153,7 +149,7 @@ void loop()
         // Accelerate to the target speed
         if (currentDelay >= targetDelay)
         {
-            currentDelay -= 1;
+            currentDelay -= 2;
             if (currentDelay < targetDelay)
                 currentDelay = targetDelay;
         }
@@ -200,6 +196,14 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
             String direction = jsonDoc["direction"];
             Serial.print("parsed " + direction);
 
+            if (direction == "forward" || direction == "backward" || direction == "left" || direction == "right")
+            {
+                digitalWrite(EN_PIN1, LOW); // Enable driver 1
+                digitalWrite(EN_PIN2, LOW); // Enable driver 2
+                digitalWrite(EN_PIN3, LOW); // Enable driver 3
+                digitalWrite(EN_PIN4, LOW); // Enable driver 4
+            }
+
             if (direction == "forward")
             {
                 digitalWrite(dirPinFrontLeft, false); // Set direction
@@ -236,6 +240,10 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
             {
                 motorRunning = false;
                 initialized = false;
+                digitalWrite(EN_PIN1, HIGH); // Disable driver 1
+                digitalWrite(EN_PIN2, HIGH); // Disable driver 2
+                digitalWrite(EN_PIN3, HIGH); // Disable driver 3
+                digitalWrite(EN_PIN4, HIGH); // Disable driver 4
             }
         }
 
