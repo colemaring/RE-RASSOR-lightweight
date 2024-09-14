@@ -28,7 +28,8 @@ upload the sketch <br>
 ![Screenshot 2024-08-08 155605](https://github.com/user-attachments/assets/68521e46-437e-4adb-a106-f6c1c0f90400)
 
 # Wiring Diagram
-![Screenshot 2024-08-19 201200](https://github.com/user-attachments/assets/0b4eef8c-13d9-4370-a005-9cb728242d76)
+![Screenshot 2024-09-14 104956](https://github.com/user-attachments/assets/00c14777-11d9-4daa-891e-cef313ca06d1)
+
 
 # Electronics
  - ESP32 <br>
