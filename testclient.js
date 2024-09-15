@@ -3,7 +3,7 @@
 
 const WebSocket = require("ws");
 
-const ws = new WebSocket("ws://161.35.13.104:8080?name=superman");
+const ws = new WebSocket("wss://rerassor.com?name=superman");
 
 ws.on("open", () => {
   console.log("Connected to the WebSocket server");
