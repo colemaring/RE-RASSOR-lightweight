@@ -38,7 +38,7 @@ const ConnectedClients = ({ setConnected, connected, ws }) => {
   };
 
   return (
-    <div>
+    <div className="table-container">
       <h1>Online Rovers:</h1>
       <Table striped bordered hover>
         <thead>
