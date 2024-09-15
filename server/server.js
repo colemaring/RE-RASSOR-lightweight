@@ -1,20 +1,27 @@
-const WebSocket = require("ws");
-const express = require("express");
+const express = require('express');
 const app = express();
-const port = 80;
+const https = require('https');
+const fs = require('fs');
+const WebSocket = require('ws');
 
-app.use(express.static("dist"));
+const options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/rerassor.com/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/rerassor.com/fullchain.pem'),
+};
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
+const httpsServer = https.createServer(options, app);
+
+app.use(express.static('dist'));
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
 });
 
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
+httpsServer.listen(443, () => {
+  console.log('Server started on port 443');
 });
-// websocket server
-const wss = new WebSocket.Server({ port: 8080 });
-//try 443?
+
+const wss = new WebSocket.Server({ server: httpsServer });
 
 let connectedClients = [];
 
