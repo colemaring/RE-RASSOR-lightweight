@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const https = require('https');
+const http = require('http');
 const fs = require('fs');
 const WebSocket = require('ws');
 
@@ -11,6 +12,12 @@ const options = {
 
 const httpsServer = https.createServer(options, app);
 
+// Create an HTTP server to redirect to HTTPS
+const httpServer = http.createServer((req, res) => {
+  res.writeHead(301, { 'Location': `https://${req.headers.host}${req.url}` });
+  res.end();
+});
+
 app.use(express.static('dist'));
 
 app.get('/', (req, res) => {
@@ -19,6 +26,10 @@ app.get('/', (req, res) => {
 
 httpsServer.listen(443, () => {
   console.log('Server started on port 443');
+});
+
+httpServer.listen(80, () => {
+  console.log('HTTP redirect server started on port 80');
 });
 
 const wss = new WebSocket.Server({ server: httpsServer });
