@@ -31,8 +31,9 @@ httpsServer.listen(443, () => {
 httpServer.listen(80, () => {
   console.log('HTTP redirect server started on port 80');
 });
-
-const wss = new WebSocket.Server({ server: httpsServer });
+// websocket server
+const wss = new WebSocket.Server({ port: 8080 });
+//try 443?
 
 let connectedClients = [];
 
@@ -207,5 +208,12 @@ ws.on("message", (message) => {
         );
       }
     });
+  });
+});
+
+httpsServer.on('upgrade', (request, socket, head) => {
+  // Forward the upgrade request to the WebSocket server on port 8080
+  wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.emit('connection', ws, request);
   });
 });
