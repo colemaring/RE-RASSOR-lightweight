@@ -34,7 +34,7 @@ plug in the esp32, select esp32 dev module as the board, and select the correspo
 upload the sketch <br>
 
 # Current UI
-![Screenshot 2024-08-08 155605](https://github.com/user-attachments/assets/68521e46-437e-4adb-a106-f6c1c0f90400)
+![Screenshot 2024-09-21 112738](https://github.com/user-attachments/assets/d0fce12f-33ee-4bd2-bbf5-f3fd5b972449)
 
 # Wiring Diagram
 ![Screenshot 2024-09-14 104956](https://github.com/user-attachments/assets/00c14777-11d9-4daa-891e-cef313ca06d1)
