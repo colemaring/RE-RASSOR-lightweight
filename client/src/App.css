@@ -6,6 +6,42 @@ html, body {
   height: 100%;
 }
 
+.about-container {
+  max-width: 800px; /* Adjust the width as needed */
+  margin: 0 auto; /* Center the container horizontally */
+  padding: 1rem; /* Add some padding */
+  text-align: left; /* Left justify the text */
+}
+
+.about-container h3 {
+  margin-top: 2rem; /* Add some space above headings */
+}
+
+.about-container p {
+  margin-bottom: 1rem; /* Add some space below paragraphs */
+}
+
+.media-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+.media-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.media-table td {
+  padding: 10px;
+  text-align: center;
+}
+
+.media-table img {
+  border-radius: 8px;
+}
+
 .table-container {
   max-width: 600px; /* Adjust the width as needed */
   margin: 0 auto; /* Center the table */
