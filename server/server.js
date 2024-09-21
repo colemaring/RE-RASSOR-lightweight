@@ -20,8 +20,8 @@ const httpServer = http.createServer((req, res) => {
 
 app.use(express.static('dist'));
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+app.get('*', (req, res) => {
+  res.sendFile(__dirname + '/dist/index.html');
 });
 
 httpsServer.listen(443, () => {
