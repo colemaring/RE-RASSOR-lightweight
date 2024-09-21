@@ -5,7 +5,7 @@
 
 const char *ssid = "helloworld";
 const char *password = "12341234";
-const char *host = "161.35.13.104";
+const char *host = "rerassor.com";
 const uint16_t port = 8080;
 const char *url = "/?name=testrover";
 const char *protocol = "ws";
