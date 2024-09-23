@@ -1,0 +1,27 @@
+name: Deploy to DigitalOcean Droplet
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'dist/**'
+      - 'server/server.js'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into DigitalOcean Droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DIGITALOCEAN_DROPLET_IP_RASSOR }}
+          username: ${{ secrets.DIGITALOCEAN_DROPLET_USERNAME_RASSOR  }}
+          password: ${{ secrets.DIGITALOCEAN_DROPLET_PASSWORD_RASSOR  }}
+          script: |
+            rm -r RE-RASSOR-lightweight
+            git clone https://github.com/colemaring/RE-RASSOR-lightweight.git
+            cd RE-RASSOR-lightweight
+            cd server
+            npm i 
+            pm2 start server.js
