@@ -19,6 +19,7 @@ jobs:
           username: ${{ secrets.DIGITALOCEAN_DROPLET_USERNAME_RASSOR  }}
           password: ${{ secrets.DIGITALOCEAN_DROPLET_PASSWORD_RASSOR  }}
           script: |
+            pm2 kill
             rm -r RE-RASSOR-lightweight
             git clone https://github.com/colemaring/RE-RASSOR-lightweight.git
             cd RE-RASSOR-lightweight
