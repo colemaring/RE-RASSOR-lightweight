@@ -2,6 +2,7 @@
 #include <WebSocketsClient.h>
 #include <TMC2208Stepper.h>
 #include <ArduinoJson.h>
+#include <math.h>
 
 const char *ssid = "helloworld";
 const char *password = "12341234";
@@ -34,7 +35,8 @@ TMC2208Stepper driver3 = TMC2208Stepper(&Serial1);
 TMC2208Stepper driver4 = TMC2208Stepper(&Serial1);
 
 bool motorRunning = false;
-double speedMultiplier = 1.0;
+double speedMultiplier = 1;
+double speedVal = 1;
 static bool initialized = false;
 static unsigned long currentDelay = 1000;
 
@@ -57,7 +59,7 @@ void setup()
 
     driver1.pdn_disable(true);     // Use PDN/UART pin for communication
     driver1.I_scale_analog(false); // Use internal voltage reference
-    driver1.rms_current(500);      // Set driver current 500mA
+    driver1.rms_current(800);      // Set driver current 500mA
     driver1.toff(2);               // Enable driver in software
 
     digitalWrite(dirPinFrontLeft, HIGH); // Set direction to clockwise (or LOW for counter-clockwise)
@@ -74,7 +76,7 @@ void setup()
 
     driver2.pdn_disable(true);     // Use PDN/UART pin for communication
     driver2.I_scale_analog(false); // Use internal voltage reference
-    driver2.rms_current(500);      // Set driver current 500mA
+    driver2.rms_current(800);      // Set driver current 500mA
     driver2.toff(2);               // Enable driver in software
 
     digitalWrite(dirPinFrontRight, HIGH); // Set direction to clockwise (or LOW for counter-clockwise)
@@ -91,7 +93,7 @@ void setup()
 
     driver3.pdn_disable(true);     // Use PDN/UART pin for communication
     driver3.I_scale_analog(false); // Use internal voltage reference
-    driver3.rms_current(500);      // Set driver current 500mA
+    driver3.rms_current(800);      // Set driver current 500mA
     driver3.toff(2);               // Enable driver in software
 
     digitalWrite(dirPinRearLeft, HIGH); // Set direction to clockwise (or LOW for counter-clockwise)
@@ -108,7 +110,7 @@ void setup()
 
     driver4.pdn_disable(true);     // Use PDN/UART pin for communication
     driver4.I_scale_analog(false); // Use internal voltage reference
-    driver4.rms_current(500);      // Set driver current 500mA
+    driver4.rms_current(800);      // Set driver current 500mA
     driver4.toff(2);               // Enable driver in software
 
     digitalWrite(dirPinRearRight, HIGH); // Set direction to clockwise (or LOW for counter-clockwise)
@@ -144,13 +146,19 @@ void loop()
         }
 
         // Calculate the target delay based on the speedMultiplier
-        unsigned long targetDelay = 100 * (3 - speedMultiplier);
+        unsigned long targetDelay = 100 * (10 - pow(speedVal, 2));
 
+        if (speedVal == 0.2)
+          targetDelay = 3000;
+          
         // Accelerate to the target speed
-        if (currentDelay >= targetDelay)
-        {
+        if (currentDelay > targetDelay) {
             currentDelay -= 1;
             if (currentDelay < targetDelay)
+                currentDelay = targetDelay;
+        } else if (currentDelay < targetDelay) {
+            currentDelay += 1;
+            if (currentDelay > targetDelay)
                 currentDelay = targetDelay;
         }
 
@@ -251,7 +259,7 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
         {
             double speed = jsonDoc["speed"].as<double>();
             Serial.print("parsed " + String(speed));
-            speedMultiplier = speed;
+            speedVal = speedMultiplier * speed;
         }
         break;
     }
