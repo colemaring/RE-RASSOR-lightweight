@@ -4,8 +4,8 @@
 #include <ArduinoJson.h>
 #include <math.h>
 
-const char *ssid = "helloworld";
-const char *password = "12341234";
+const char *ssid = "ExolithLab";
+const char *password = "password123";
 const char *host = "rerassor.com";
 const uint16_t port = 8080;
 const char *url = "/?name=testrover";
