@@ -18,16 +18,17 @@ function MyNavbar() {
             <Nav.Link as={Link} to="/about">
               About
             </Nav.Link>
-            {/* <Nav.Link href="#link">History</Nav.Link> include in about page*/}
-            {/* <Nav.Link href="#link">Development</Nav.Link> part of about*/}
-            {/* <Nav.Link href="#link">Code</Nav.Link> github button in about section*/}
+
             <Nav.Link as={Link} to="/resources">
               Resources
             </Nav.Link>
-            {/* <Nav.Link href="#link">Notes</Nav.Link> part of assembly instructions*/}
-            {/* <Nav.Link href="#link">BOM</Nav.Link> part of assembly instructinos*/}
+
             <Nav.Link as={Link} to="/media">
               Media
+            </Nav.Link>
+
+            <Nav.Link as={Link} to="/graphs">
+              Graphs
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
