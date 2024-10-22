@@ -15,20 +15,26 @@ function MyNavbar() {
             <Nav.Link as={Link} to="/">
               Controller
             </Nav.Link>
+            <Nav.Link as={Link} to="/graphs">
+              Telemetry
+            </Nav.Link>
+            <Nav.Link as={Link} to="/binstream">
+              Bin Stream
+            </Nav.Link>
+            <Nav.Link as={Link} to="/fpvstream">
+              FPV Stream
+            </Nav.Link>
+            <Nav.Link as={Link} to="/location">
+              Location
+            </Nav.Link>
             <Nav.Link as={Link} to="/about">
               About
             </Nav.Link>
-
             <Nav.Link as={Link} to="/resources">
               Resources
             </Nav.Link>
-
             <Nav.Link as={Link} to="/media">
               Media
-            </Nav.Link>
-
-            <Nav.Link as={Link} to="/graphs">
-              Graphs
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

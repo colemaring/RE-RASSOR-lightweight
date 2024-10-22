@@ -6,6 +6,40 @@ html, body {
   height: 100%;
 }
 
+.streamContainer {
+  margin: 1vw;
+  overflow: hidden;
+}
+
+.streamImage {
+  width: 100%;
+  height: 90vh;
+  object-fit: contain;
+}
+
+.graphsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: 100%;
+}
+.graph1Container {
+  width: 50%; /* Adjust the width as needed */
+  height: 40vh; /* Adjust the height as needed */
+}
+.graph2Container {
+  width: 50%; /* Adjust the width as needed */
+  height: 40vh; /* Adjust the height as needed */
+}
+.graph3Container {
+  width: 50%; /* Adjust the width as needed */
+  height: 40vh; /* Adjust the height as needed */
+}
+.graph4Container {
+  width: 50%; /* Adjust the width as needed */
+  height: 40vh; /* Adjust the height as needed */
+}
+
 .about-container {
   max-width: 800px; /* Adjust the width as needed */
   margin: 0 auto; /* Center the container horizontally */

@@ -6,6 +6,9 @@ import Resources from "./pages/Resources";
 import Media from "./pages/Media";
 import App from "./App";
 import Graphs from "./pages/Graphs";
+import BinStream from "./pages/BinStream";
+import FPVStream from "./pages/FPVStream";
+import Location from "./pages/Location";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -16,6 +19,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/resources" element={<Resources />} />
         <Route path="/media" element={<Media />} />
         <Route path="/graphs" element={<Graphs />} />
+        <Route path="/binstream" element={<BinStream />} />
+        <Route path="/fpvstream" element={<FPVStream />} />
+        <Route path="/location" element={<Location />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
