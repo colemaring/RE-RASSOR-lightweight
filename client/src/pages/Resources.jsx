@@ -102,7 +102,7 @@ function Resources() {
           marginBottom: "0.3rem",
         }}
       >
-        Mostly Irrelevant
+        Other
       </h3>
       <a
         href="https://fsi.ucf.edu/student-design/robotics/re-rassor/"
