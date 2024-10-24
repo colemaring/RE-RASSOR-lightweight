@@ -4,9 +4,9 @@ Documentation, assembly, and notes found here: [Drive link](https://drive.google
 
 # TODO:
 test PCB seen [here](https://imgur.com/a/I4IoIK9) <br>
-implement better turning <br>
-implement IMU into WSS stream <br>
-video feed <br>
+new PCB with IMU, more TMC2208 slots, integrated buck converter, and camera connector? <br>
+lower turning speed <br>
+implement IMU and camera feed into WSS stream <br>
 
 # Features:
 - Network agnostic. The controller and rover can be on different wifi networks. <br>
