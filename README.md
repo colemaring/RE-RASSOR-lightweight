@@ -3,6 +3,7 @@ A React &amp; Node web-app which uses WebSockets to communicate with an internet
 Documentation, assembly, and notes found here: [Drive link](https://drive.google.com/drive/folders/1gh6lrkOwWv0ZDy4qrbicX4A5fCzM1dyK) <br><br>
 
 # TODO:
+test PCB seen [here](https://imgur.com/a/I4IoIK9) <br>
 implement better turning <br>
 implement IMU into WSS stream <br>
 video feed <br>
