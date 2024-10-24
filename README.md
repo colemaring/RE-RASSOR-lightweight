@@ -1,6 +1,6 @@
 A React &amp; Node web-app which uses WebSockets to communicate with an internet connected ESP32. <br><br>
 
-Documentation, assembly, and notes found here: https://docs.google.com/document/d/1jhzQ0pJI8P-jmU7yeFxD81gAwapxjM90a2alEfP4OI4/edit#heading=h.j3emiwso5d2c <br><br>
+Documentation, assembly, and notes found here: [Drive link](https://drive.google.com/drive/folders/1gh6lrkOwWv0ZDy4qrbicX4A5fCzM1dyK) <br><br>
 
 # TODO:
 implement better turning <br>
