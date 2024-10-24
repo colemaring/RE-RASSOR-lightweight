@@ -64,7 +64,7 @@ const Location = () => {
       <MyNavbar />
       <Canvas
         shadows
-        style={{ height: "93vh" }}
+        style={{ height: "94vh" }}
         camera={{ position: [-100, 100, 150] }}
       >
         {/* Ambient Light */}

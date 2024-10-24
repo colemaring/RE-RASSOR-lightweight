@@ -42,7 +42,7 @@ const RealtimeGraph = ({ name }) => {
     color = "black";
   } else if (name === "graph2") {
     color = "blue";
-  } else if (name === "graph3") {
+  } else if (name === "Latency") {
     color = "green";
   } else if (name === "graph4") {
     color = "purple";
@@ -57,7 +57,10 @@ const RealtimeGraph = ({ name }) => {
         series={[{ dataKey: "y", label: name || "Data", color: color }]} // y-axis is mapped to 'y'
         height={300}
         margin={{ left: 30, right: 30, top: 30, bottom: 30 }}
-        grid={{ vertical: true, horizontal: true }}
+        grid={{
+          horizontal: true,
+          vertical: true,
+        }}
         skipAnimation
       />
     </div>

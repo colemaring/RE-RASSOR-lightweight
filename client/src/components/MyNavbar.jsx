@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import DarkModeToggle from "./DarkModeToggle";
+import { useState } from "react";
 
 function MyNavbar() {
   return (
@@ -38,6 +40,7 @@ function MyNavbar() {
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
+        <DarkModeToggle />
       </Container>
     </Navbar>
   );

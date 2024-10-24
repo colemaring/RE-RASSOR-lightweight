@@ -8,6 +8,7 @@ import MyNavbar from "./components/MyNavbar";
 
 function App() {
   const [connected, setConnected] = useState(null);
+
   // Establish WebSocket connection
   const wsUrl = "wss://rerassor.com";
   const ws = new WebSocket(wsUrl);
