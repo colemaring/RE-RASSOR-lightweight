@@ -5,7 +5,12 @@ import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import MyNavbar from "../components/MyNavbar";
 import * as THREE from "three";
 import rover from "../assets/rover.stl";
+import { Html } from "@react-three/drei";
 import terrain from "../assets/Apollo_16.stl";
+import {
+  CSS2DRenderer,
+  CSS2DObject,
+} from "three/addons/renderers/CSS2DRenderer.js";
 
 // STL Model Loader Component
 const STLModel = ({ url }) => {
@@ -54,6 +59,9 @@ const STLModel2 = ({ url }) => {
   return (
     <mesh ref={meshRef} geometry={geometry}>
       <meshStandardMaterial color="#377039" side={THREE.DoubleSide} />
+      <Html>
+        <div style={{ color: "white" }}>testrover</div>
+      </Html>
     </mesh>
   );
 };
