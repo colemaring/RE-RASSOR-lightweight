@@ -40,10 +40,11 @@ if (!isDev) {
   });
 }
 
-app.use(express.static("dist"));
+app.use(express.static("../client/dist"));
 
+// For all routes, return index.html from the dist folder
 app.get("*", (req, res) => {
-  res.sendFile(__dirname + "/dist/index.html");
+  res.sendFile( "/root/RE-RASSOR-lightweight/client/dist/index.html");
 });
 
 // websocket server
