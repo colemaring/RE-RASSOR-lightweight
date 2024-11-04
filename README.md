@@ -27,7 +27,7 @@ change the ip in the roverclient.ino file to match the domain or ipv4 of the ser
 change the ip in App.jsx and rebuild the frontend using npm vite build (when you do this move the new dist file into the server folder) <br>
 install node <br>
 git clone this repo <br>
-cd into rover <br>
+cd into server <br>
 npm install <br>
 run server.js with either node or a node process manager like pm2 <br>
 make sure firewalls arent blocking port 80 or 8080 <br>
