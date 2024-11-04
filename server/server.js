@@ -1,38 +1,55 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const https = require('https');
-const http = require('http');
-const fs = require('fs');
-const WebSocket = require('ws');
+const https = require("https");
+const http = require("http");
+const fs = require("fs");
+const WebSocket = require("ws");
 
-const options = {
-  key: fs.readFileSync('/etc/letsencrypt/live/rerassor.com/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/rerassor.com/fullchain.pem'),
-};
+const isDev = process.argv.includes("dev");
 
-const httpsServer = https.createServer(options, app);
+let httpsServer, httpServer;
 
-// Create an HTTP server to redirect to HTTPS
-const httpServer = http.createServer((req, res) => {
-  res.writeHead(301, { 'Location': `https://${req.headers.host}${req.url}` });
-  res.end();
+if (!isDev) {
+  // production server with ssl and http redirect
+  const options = {
+    key: fs.readFileSync("/etc/letsencrypt/live/rerassor.com/privkey.pem"),
+    cert: fs.readFileSync("/etc/letsencrypt/live/rerassor.com/fullchain.pem"),
+  };
+
+  httpsServer = https.createServer(options, app);
+
+  // Create an HTTP server to redirect to HTTPS
+  httpServer = http.createServer((req, res) => {
+    res.writeHead(301, { Location: `https://${req.headers.host}${req.url}` });
+    res.end();
+  });
+
+  httpsServer.listen(443, () => {
+    console.log("Server started on port 443");
+  });
+
+  httpServer.listen(80, () => {
+    console.log("HTTP redirect server started on port 80");
+  });
+} else {
+  // dev server
+  httpServer = http.createServer(app);
+
+  httpServer.listen(8080, () => {
+    console.log("Development server started on port 8080");
+  });
+}
+
+app.use(express.static("dist"));
+
+app.get("*", (req, res) => {
+  res.sendFile(__dirname + "/dist/index.html");
 });
 
-app.use(express.static('dist'));
-
-app.get('*', (req, res) => {
-  res.sendFile(__dirname + '/dist/index.html');
-});
-
-httpsServer.listen(443, () => {
-  console.log('Server started on port 443');
-});
-
-httpServer.listen(80, () => {
-  console.log('HTTP redirect server started on port 80');
-});
 // websocket server
-const wss = new WebSocket.Server({ port: 8080 });
+let wss = null;
+if (!isDev) wss = new WebSocket.Server({ port: 8080 });
+else wss = new WebSocket.Server({ noServer: true });
 //try 443?
 
 let connectedClients = [];
@@ -51,50 +68,50 @@ wss.on("connection", (ws, req) => {
     if (!connectedClients.includes(name)) {
       connectedClients.push(name);
     }
-  console.log(`Client connected: ${name}`);
-}
+    console.log(`Client connected: ${name}`);
+  }
 
   // Set up ping interval
-const pingIntervalId = setInterval(() => {
-  ws.ping();
-  ws.pingTimeoutId = setTimeout(() => {
-    if (
-      ws.readyState === WebSocket.OPEN &&
-      connectedClients.includes(ws.clientName)
-    ) {
-      // Client didn't respond to ping, remove from connected clients and terminate connection
-      connectedClients = connectedClients.filter(
-        (client) => client !== ws.clientName
-      );
-      console.log(`Client disconnected (unresponsive): ${ws.clientName}`);
+  const pingIntervalId = setInterval(() => {
+    ws.ping();
+    ws.pingTimeoutId = setTimeout(() => {
+      if (
+        ws.readyState === WebSocket.OPEN &&
+        connectedClients.includes(ws.clientName)
+      ) {
+        // Client didn't respond to ping, remove from connected clients and terminate connection
+        connectedClients = connectedClients.filter(
+          (client) => client !== ws.clientName
+        );
+        console.log(`Client disconnected (unresponsive): ${ws.clientName}`);
 
-      // Terminate all clients with the same name
-      wss.clients.forEach((client) => {
-        if (client.clientName === ws.clientName) {
-          client.terminate();
-        }
-      });
+        // Terminate all clients with the same name
+        wss.clients.forEach((client) => {
+          if (client.clientName === ws.clientName) {
+            client.terminate();
+          }
+        });
 
-      // Broadcast connected clients to all connected clients
-      wss.clients.forEach((client) => {
-        if (client !== ws && client.readyState === WebSocket.OPEN) {
-          client.send(
-            JSON.stringify({
-              type: "connectedClients",
-              clients: connectedClients,
-            })
-          );
-        }
-      });
-      clearInterval(pingIntervalId); // Stop the ping interval
-    }
+        // Broadcast connected clients to all connected clients
+        wss.clients.forEach((client) => {
+          if (client !== ws && client.readyState === WebSocket.OPEN) {
+            client.send(
+              JSON.stringify({
+                type: "connectedClients",
+                clients: connectedClients,
+              })
+            );
+          }
+        });
+        clearInterval(pingIntervalId); // Stop the ping interval
+      }
+    }, 5000);
   }, 5000);
-}, 5000);
 
-// Handle pong response
-ws.on("pong", () => {
-  clearTimeout(ws.pingTimeoutId);
-});
+  // Handle pong response
+  ws.on("pong", () => {
+    clearTimeout(ws.pingTimeoutId);
+  });
 
   // Broadcast connected clients to all connected clients
   wss.clients.forEach((client) => {
@@ -105,7 +122,7 @@ ws.on("pong", () => {
     }
   });
 
-ws.on("message", (message) => {
+  ws.on("message", (message) => {
     const data = JSON.parse(message);
     if (data.type === "getConnectedClients") {
       // Send the current list of connected rovers to the client
@@ -166,15 +183,17 @@ ws.on("message", (message) => {
   // Handle client disconnection
   ws.on("close", () => {
     // Remove client name from the array
-    connectedClients = connectedClients.filter((client) => client !== ws.clientName);
+    connectedClients = connectedClients.filter(
+      (client) => client !== ws.clientName
+    );
     console.log(`Client disconnected: ${name}`);
     console.log(`Connected clients: ${connectedClients}`);
 
-     wss.clients.forEach((client) => {
-    if (client.clientName === ws.clientName && client !== ws) {
-      client.terminate();
-    }
-  });
+    wss.clients.forEach((client) => {
+      if (client.clientName === ws.clientName && client !== ws) {
+        client.terminate();
+      }
+    });
 
     // Broadcast connected clients to all connected clients
     wss.clients.forEach((client) => {
@@ -188,13 +207,14 @@ ws.on("message", (message) => {
       }
     });
   });
-
 
   // Handle client errors
   ws.on("error", (error) => {
     console.error("Client error:", error);
     // Remove client name from the array
-    connectedClients = connectedClients.filter((client) => client !== ws.clientName);
+    connectedClients = connectedClients.filter(
+      (client) => client !== ws.clientName
+    );
     console.log(`Connected clients: ${connectedClients}`);
 
     // Broadcast connected clients to all connected clients
@@ -210,10 +230,11 @@ ws.on("message", (message) => {
     });
   });
 });
-
-httpsServer.on('upgrade', (request, socket, head) => {
-  // Forward the upgrade request to the WebSocket server on port 8080
-  wss.handleUpgrade(request, socket, head, (ws) => {
-    wss.emit('connection', ws, request);
+if (!isDev) {
+  httpsServer.on("upgrade", (request, socket, head) => {
+    // Forward the upgrade request to the WebSocket server on port 8080
+    wss.handleUpgrade(request, socket, head, (ws) => {
+      wss.emit("connection", ws, request);
+    });
   });
-});
+}
