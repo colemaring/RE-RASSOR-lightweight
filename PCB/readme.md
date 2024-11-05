@@ -1,4 +1,4 @@
-# TDOO:
+# TODO:
  - integrate buck converted onboard <br>
  - integrate IMU unit onboard <br>
  - itegrate camera unit onboard <br>
