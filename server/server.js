@@ -5,7 +5,7 @@ const http = require("http");
 const fs = require("fs");
 const WebSocket = require("ws");
 
-const isDev = process.argv.includes("dev");
+const isDev = process.env.NODE_ENV === "dev";
 
 let httpsServer, httpServer;
 
