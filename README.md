@@ -28,8 +28,6 @@ docker run -p 8080:8080 -p 443:443 -p 80:80 re-rassor-lightweight
 
 # TODO:
 CI/CD w Docker on AWS <br>
-test PCB seen [here](https://imgur.com/a/I4IoIK9) <br>
 new PCB with IMU, more TMC2208 slots, integrated buck converter, and camera connector? <br>
 lower turning speed <br>
 implement IMU and camera feed into WSS stream <br>
-
