@@ -1,6 +1,5 @@
-A lightweight web teleoperations interface and data dashboard for the RE-RASSOR project. https://rerassor.com/ <br><br>
-
-Documentation, assembly, and notes found here: [Drive link](https://drive.google.com/drive/folders/1gh6lrkOwWv0ZDy4qrbicX4A5fCzM1dyK) <br><br>
+A lightweight web teleoperations interface and data dashboard for the RE-RASSOR project. https://rerassor.com/ <br>
+Documentation, assembly, and notes found here: [Drive link](https://drive.google.com/drive/folders/1gh6lrkOwWv0ZDy4qrbicX4A5fCzM1dyK) <br>
 
 # Features:
 - Network agnostic. The controller and rover can be on different wifi networks <br>
