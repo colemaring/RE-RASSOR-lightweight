@@ -22,9 +22,7 @@ assuming that the network you provided has internet, you should see the rover li
 
 # ONLY IF you are to host YOUR OWN server, follow these steps:
 ## Development:
-docker run -p 8080:8080 -p 443:443 -p 80:80 -e NODE_ENV=dev re-rassor-lightweight <br>
-or<br>
-cd client && npm i && npm run dev
+docker run -p 8080:8080 -p 443:443 -p 80:80 -e NODE_ENV=dev re-rassor-lightweight
 
 ## Production:
 docker run -p 8080:8080 -p 443:443 -p 80:80 re-rassor-lightweight
