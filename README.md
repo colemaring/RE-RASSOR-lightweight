@@ -22,15 +22,10 @@ upload the sketch <br>
 assuming that the network you provided has internet, you should see the rover listed on rerassor.com <br>
 
 # ONLY IF you are to host YOUR OWN server, follow these steps:
-fork this repo <br>
-change the ip in the roverclient.ino file to match the domain or ipv4 of the server your are hosting <br>
-change the ip in App.jsx and rebuild the frontend using npm vite build (when you do this move the new dist file into the server folder) <br>
-install node <br>
-git clone this repo <br>
-cd into server <br>
-npm install <br>
-run server.js with either node or a node process manager like pm2 <br>
-make sure firewalls arent blocking port 80 or 8080 <br>
+## Development:
+docker run -p 8080:8080 -p 443:443 -p 80:80 -e NODE_ENV=dev re-rassor-lightweight
+## Production:
+docker run -p 8080:8080 -p 443:443 -p 80:80 re-rassor-lightweight
 
 # TODO:
 CI/CD w Docker on AWS <br>
