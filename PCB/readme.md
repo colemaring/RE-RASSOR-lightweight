@@ -1,3 +1,9 @@
+Above are the files needed to order the PCB from PCBWAY <br>
+Use default options with no assembly <br>
+Use the BOM or see this to order the correct components: <br>
+![image](https://github.com/user-attachments/assets/973fd098-38f2-4402-ae7d-b41fd2da2311)
+
+
 # TODO:
  - integrate buck converted onboard <br>
  - integrate IMU unit onboard <br>
