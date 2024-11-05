@@ -5,7 +5,7 @@
 #include <math.h>
 
 const char *ssid = "ExolithLab";
-const char *password = "password123";
+const char *password = "";
 const char *host = "rerassor.com";
 const uint16_t port = 8080;
 const char *url = "/?name=testrover";
@@ -15,18 +15,18 @@ WiFiClient client;
 WebSocketsClient ws;
 
 // stepper motor pins
-#define dirPinFrontLeft 15
-#define stepPinFrontLeft 2
-#define dirPinFrontRight 4
-#define stepPinFrontRight 5
-#define dirPinRearLeft 19
-#define stepPinRearLeft 18
-#define dirPinRearRight 21
-#define stepPinRearRight 22
-#define EN_PIN1 13 // LOW: Driver enabled. HIGH: Driver disabled
-#define EN_PIN2 26 // LOW: Driver enabled. HIGH: Driver disabled
-#define EN_PIN3 14 // LOW: Driver enabled. HIGH: Driver disabled
-#define EN_PIN4 27 // LOW: Driver enabled. HIGH: Driver disabled
+#define dirPinFrontLeft 1
+#define stepPinFrontLeft 22
+#define dirPinFrontRight 21
+#define stepPinFrontRight 3
+#define dirPinRearLeft 15
+#define stepPinRearLeft 2
+#define dirPinRearRight 17
+#define stepPinRearRight 5
+#define EN_PIN1 23 // LOW: Driver enabled. HIGH: Driver disabled
+#define EN_PIN2 19 // LOW: Driver enabled. HIGH: Driver disabled
+#define EN_PIN3 16 // LOW: Driver enabled. HIGH: Driver disabled
+#define EN_PIN4 18 // LOW: Driver enabled. HIGH: Driver disabled
 #define motorInterfaceType 1
 
 TMC2208Stepper driver1 = TMC2208Stepper(&Serial1);
