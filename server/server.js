@@ -9,6 +9,8 @@ const path = require("path");
 const isDev = process.env.NODE_ENV === "dev";
 const SSLkey = process.env.SSL_KEY;
 const SSLcert = process.env.SSL_CERT;
+const SSLkeypath = process.env.SSL_KEYPATH;
+const SSLcertpath = process.env.SSL_CERTPATH;
 
 console.log(SSLkey)
 
@@ -16,10 +18,24 @@ let httpsServer, httpServer;
 
 if (!isDev) {
   // production server with ssl and http redirect
-  const options = {
-    key: SSLkey,
-    cert: SSLcert,
-  };
+
+  // droplet server
+  if (SSLcertpath)
+  {
+    const options = {
+    key: fs.readFileSync(SSLkeypath),
+    cert: fs.readFileSync(SSLcertpath),
+    };
+  }
+  // docker
+  else
+  {
+    const options = {
+    key: SSLkey
+    cert: SSLcert
+    };
+  }
+  
 
   httpsServer = https.createServer(options, app);
 
