@@ -30,4 +30,4 @@ jobs:
             cd RE-RASSOR-lightweight
             cd server
             npm i 
-            pm2 start server.js --env NODE_ENV=production --env SSL_KEYPATH=/etc/letsencrypt/live/rerassor.com/privkey.pem --env SSL_CERTPATH=/etc/letsencrypt/live/rerassor.com/fullchain.pem
+            NODE_ENV=production SSL_KEYPATH=/etc/letsencrypt/live/rerassor.com/privkey.pem SSL_CERTPATH=/etc/letsencrypt/live/rerassor.com/fullchain.pem pm2 start server.js
