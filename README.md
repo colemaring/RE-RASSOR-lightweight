@@ -21,7 +21,7 @@ upload the sketch <br>
 assuming that the network you provided has internet, you should see the rover listed on rerassor.com <br>
 
 # ONLY IF you are to host YOUR OWN server, follow these steps:
-```docker build -t re-rassor-lightweight .```
+```docker build --no-cache -t re-rassor-lightweight .```
 ## Development:
 ```docker run -p 8080:8080 -p 443:443 -p 80:80 -e NODE_ENV=dev re-rassor-lightweight```
 
