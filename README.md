@@ -24,14 +24,15 @@ assuming that the network you provided has internet, you should see the rover li
 build <br>
 ```docker build --no-cache -t re-rassor-lightweight .```
 
-docker container<br>
-```docker run -p 8080:8080 -p 443:443 -p 80:80 -e SSL_KEY=<raw text key> SSL_CERT=<raw text cert> re-rassor-lightweight```
-
-server (linux server)<br>
-```docker run -p 8080:8080 -p 443:443 -p 80:80 -e SSL_KEYPATH=/etc/letsencrypt/live/rerassor.com/privkey.pem SSL_CERTPATH=/etc/letsencrypt/live/rerassor.com/fullchain.pem re-rassor-lightweight```
-
 dev (run locally)<br>
 ```docker run -p 8080:8080 -p 443:443 -p 80:80 -e NODE_ENV=dev re-rassor-lightweight```
+
+ECS, if you don't know what this does, ignore it<br>
+```docker run -p 8080:8080 -p 443:443 -p 80:80 -e SSL_KEY=<raw text key> SSL_CERT=<raw text cert> re-rassor-lightweight```
+
+EC2, if you don't know what this does, ignore it<br>
+```docker run -p 8080:8080 -p 443:443 -p 80:80 -e SSL_KEYPATH=/etc/letsencrypt/live/rerassor.com/privkey.pem SSL_CERTPATH=/etc/letsencrypt/live/rerassor.com/fullchain.pem re-rassor-lightweight```
+
 
 # TODO:
 CI/CD w Docker on AWS <br>
