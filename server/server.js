@@ -11,7 +11,7 @@ const SSLkey = process.env.SSL_KEY;
 const SSLcert = process.env.SSL_CERT;
 const SSLkeypath = process.env.SSL_KEYPATH;
 const SSLcertpath = process.env.SSL_CERTPATH;
-console.log("hello")
+console.log("hesdfllo")
 let httpsServer, httpServer, options;
 
 if (!isDev) {
