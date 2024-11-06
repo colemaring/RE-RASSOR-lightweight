@@ -17,6 +17,11 @@ import v1implemented from "../assets/v1implemented.jpg";
 import roverandlaptop from "../assets/roverandlaptop.jpg";
 import esp32wiring from "../assets/esp32wiring.jpg";
 import explodedv2 from "../assets/explodedv2.png";
+import graph from "../assets/graph.png";
+import boardwired from "../assets/boardwired.jpg";
+import boardplain from "../assets/boardplain.jpg";
+import PCBscreenshot from "../assets/PCBscreenshot.png";
+import boardtogether from "../assets/boardtogether.jpg";
 
 function Media() {
   return (
@@ -142,6 +147,30 @@ function Media() {
         src={explodedv2}
         alt={"Exploded view of V2 of the new gearbox"}
         title={"Exploded view of V2 of the new gearbox"}
+        style={{ width: "400px", height: "auto", marginBottom: "1rem" }}
+      />
+      <img
+        src={PCBscreenshot}
+        alt={"PCB wiring screenshot"}
+        title={"PCB wiring screenshot"}
+        style={{ width: "400px", height: "auto", marginBottom: "1rem" }}
+      />
+      <img
+        src={boardplain}
+        alt={"PCB board soldered"}
+        title={"PCB board soldered"}
+        style={{ width: "400px", height: "auto", marginBottom: "1rem" }}
+      />
+      <img
+        src={boardwired}
+        alt={"PCB board soldered and wired"}
+        title={"PCB board soldered and wired"}
+        style={{ width: "400px", height: "auto", marginBottom: "1rem" }}
+      />
+      <img
+        src={boardtogether}
+        alt={"PCB board installed"}
+        title={"PCB board installed"}
         style={{ width: "400px", height: "auto", marginBottom: "1rem" }}
       />
     </>
