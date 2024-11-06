@@ -12,9 +12,7 @@ const SSLcert = process.env.SSL_CERT;
 const SSLkeypath = process.env.SSL_KEYPATH;
 const SSLcertpath = process.env.SSL_CERTPATH;
 
-console.log(SSLkey)
-
-let httpsServer, httpServer;
+let httpsServer, httpServer, options;
 
 if (!isDev) {
   // production server with ssl and http redirect
@@ -22,7 +20,7 @@ if (!isDev) {
   // droplet server
   if (SSLcertpath)
   {
-    const options = {
+    options = {
     key: fs.readFileSync(SSLkeypath),
     cert: fs.readFileSync(SSLcertpath),
     };
@@ -30,7 +28,7 @@ if (!isDev) {
   // docker
   else
   {
-    const options = {
+    options = {
     key: SSLkey,
     cert: SSLcert,
     };
