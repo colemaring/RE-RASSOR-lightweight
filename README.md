@@ -21,12 +21,17 @@ upload the sketch <br>
 assuming that the network you provided has internet, you should see the rover listed on rerassor.com <br>
 
 # ONLY IF you are to host YOUR OWN server, follow these steps:
+build <br>
 ```docker build --no-cache -t re-rassor-lightweight .```
-## Development:
-```docker run -p 8080:8080 -p 443:443 -p 80:80 -e NODE_ENV=dev re-rassor-lightweight```
 
-## Production:
-```docker run -p 8080:8080 -p 443:443 -p 80:80 re-rassor-lightweight```
+docker container<br>
+```docker run -p 8080:8080 -p 443:443 -p 80:80 -e SSL_KEY=<raw text key> SSL_CERT=<raw text cert> re-rassor-lightweight```
+
+server (linux server)<br>
+```docker run -p 8080:8080 -p 443:443 -p 80:80 -e SSL_KEYPATH=/etc/letsencrypt/live/rerassor.com/privkey.pem SSL_CERTPATH=/etc/letsencrypt/live/rerassor.com/fullchain.pem re-rassor-lightweight```
+
+dev (run locally)<br>
+```docker run -p 8080:8080 -p 443:443 -p 80:80 -e NODE_ENV=dev re-rassor-lightweight```
 
 # TODO:
 CI/CD w Docker on AWS <br>
