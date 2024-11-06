@@ -31,8 +31,8 @@ if (!isDev) {
   else
   {
     const options = {
-    key: SSLkey
-    cert: SSLcert
+    key: SSLkey,
+    cert: SSLcert,
     };
   }
   
