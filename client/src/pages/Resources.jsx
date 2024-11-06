@@ -39,12 +39,12 @@ function Resources() {
         3D Print Files
       </a>
       <a
-        href="https://docs.google.com/document/d/1jhzQ0pJI8P-jmU7yeFxD81gAwapxjM90a2alEfP4OI4/edit?usp=sharing"
+        href="https://drive.google.com/drive/folders/1gh6lrkOwWv0ZDy4qrbicX4A5fCzM1dyK"
         target="_blank"
         rel="noopener noreferrer"
         style={{ display: "block", marginBottom: "0.2rem" }}
       >
-        Documentation (needs update)
+        Documentation
       </a>
       <a
         href="https://docs.google.com/spreadsheets/d/1NXGNP6VN6AUMzi3yI0pYu8AWPift6RHg/edit?gid=405465821#gid=405465821"
