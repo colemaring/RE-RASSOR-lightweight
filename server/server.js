@@ -4,16 +4,19 @@ const https = require("https");
 const http = require("http");
 const fs = require("fs");
 const WebSocket = require("ws");
+const path = require("path");
 
 const isDev = process.env.NODE_ENV === "dev";
+const SSLkey = process.env.NODE_ENV;
+const SSLcert = process.env.NODE_ENV;
 
 let httpsServer, httpServer;
 
 if (!isDev) {
   // production server with ssl and http redirect
   const options = {
-    key: fs.readFileSync("/etc/letsencrypt/live/rerassor.com/privkey.pem"),
-    cert: fs.readFileSync("/etc/letsencrypt/live/rerassor.com/fullchain.pem"),
+    key: SSLkey,
+    cert: SSLcert,
   };
 
   httpsServer = https.createServer(options, app);
