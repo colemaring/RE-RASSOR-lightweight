@@ -10,6 +10,8 @@ const isDev = process.env.NODE_ENV === "dev";
 const SSLkey = process.env.NODE_ENV;
 const SSLcert = process.env.NODE_ENV;
 
+console.log(SSLkey)
+
 let httpsServer, httpServer;
 
 if (!isDev) {
