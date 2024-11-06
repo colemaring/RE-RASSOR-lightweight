@@ -7,6 +7,7 @@ on:
     paths:
       - 'client/dist/**'
       - 'server/server.js'
+      - './github/workflows/main.yml'
 
 jobs:
   deploy:
@@ -14,6 +15,10 @@ jobs:
     steps:
       - name: SSH into DigitalOcean Droplet
         uses: appleboy/ssh-action@master
+        env:
+          NODE_ENV: production
+          SSL_KEY: /etc/letsencrypt/live/rerassor.com/privkey.pem
+          SSL_CERT: /etc/letsencrypt/live/rerassor.com/fullchain.pem
         with:
           host: ${{ secrets.DIGITALOCEAN_DROPLET_IP_RASSOR }}
           username: ${{ secrets.DIGITALOCEAN_DROPLET_USERNAME_RASSOR  }}
