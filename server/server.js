@@ -44,7 +44,7 @@ app.use(express.static("../client/dist"));
 
 // For all routes, return index.html from the dist folder
 app.get("*", (req, res) => {
-  res.sendFile( "/root/RE-RASSOR-lightweight/client/dist/index.html");
+  res.sendFile("../client/dist/index.html");
 });
 
 // websocket server
