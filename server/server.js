@@ -5,35 +5,33 @@ const http = require("http");
 const fs = require("fs");
 const WebSocket = require("ws");
 const path = require("path");
+Stream = require("node-rtsp-stream");
 
 const isDev = process.env.NODE_ENV === "dev";
 const SSLkey = process.env.SSL_KEY;
 const SSLcert = process.env.SSL_CERT;
 const SSLkeypath = process.env.SSL_KEYPATH;
 const SSLcertpath = process.env.SSL_CERTPATH;
-console.log("hedllo")
+console.log("hedllo");
 let httpsServer, httpServer, options;
 
 if (!isDev) {
   // production server with ssl and http redirect
 
   // droplet server
-  if (SSLcertpath)
-  {
+  if (SSLcertpath) {
     options = {
-    key: fs.readFileSync(SSLkeypath),
-    cert: fs.readFileSync(SSLcertpath),
+      key: fs.readFileSync(SSLkeypath),
+      cert: fs.readFileSync(SSLcertpath),
     };
   }
   // docker
-  else
-  {
+  else {
     options = {
-    key: SSLkey,
-    cert: SSLcert,
+      key: SSLkey,
+      cert: SSLcert,
     };
   }
-  
 
   httpsServer = https.createServer(options, app);
 
@@ -58,6 +56,17 @@ if (!isDev) {
     console.log("Development server started on port 8080");
   });
 }
+
+stream = new Stream({
+  name: "name",
+  streamUrl: "rtsp://admin:123456@108.188.73.13:1081/stream1",
+  wsPort: 9999,
+  ffmpegOptions: {
+    // options ffmpeg flags
+    "-stats": "", // an option with no neccessary value uses a blank string
+    "-r": 30, // options with required values specify the value after the key
+  },
+});
 
 app.use(express.static("../client/dist"));
 
