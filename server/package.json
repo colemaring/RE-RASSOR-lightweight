@@ -12,6 +12,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "node-rtsp-stream": "^0.0.9",
     "nodemon": "^3.1.4",
     "ws": "^8.18.0"
   }
