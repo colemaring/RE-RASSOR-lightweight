@@ -57,6 +57,7 @@ if (!isDev) {
   });
 }
 
+// RTSP stream handler
 stream = new Stream({
   name: "name",
   streamUrl: "rtsp://admin:123456@108.188.73.13:1081/stream1",
