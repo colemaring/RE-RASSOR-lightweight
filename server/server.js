@@ -262,7 +262,7 @@ wss.on("connection", (ws, req) => {
 });
 if (!isDev) {
   httpsServer.on("upgrade", (request, socket, head) => {
-    // Forward the upgrade request to the WebSocket server on port 8080
+    // Forward the upgrade request to the WebSocket server on port 8080 test
     wss.handleUpgrade(request, socket, head, (ws) => {
       wss.emit("connection", ws, request);
     });
