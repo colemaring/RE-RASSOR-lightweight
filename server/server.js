@@ -16,7 +16,7 @@ console.log("hedllo");
 let httpsServer, httpServer, options;
 
 if (!isDev) {
-  // production server with ssl and http redirect
+  // production server with ssl and http redirect asdf
 
   // droplet server
   if (SSLcertpath) {
