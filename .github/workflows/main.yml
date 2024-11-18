@@ -31,3 +31,4 @@ jobs:
             cd server
             npm i 
             NODE_ENV=production SSL_KEYPATH=/etc/letsencrypt/live/rerassor.com/privkey.pem SSL_CERTPATH=/etc/letsencrypt/live/rerassor.com/fullchain.pem pm2 start server.js
+            docker stop rtsp-to-web && docker rm rtsp-to-web && docker run --name rtsp-to-web -v $(pwd)/config.json:/config/config.json -v /etc/letsencrypt/live/rerassor.com/fullchain.pem:/config/server.crt -v /etc/letsencrypt/live/rerassor.com/privkey.pem:/config/server.key -p 8083:8083 -p 8084:8084 ghcr.io/deepch/rtsptoweb:latest &
