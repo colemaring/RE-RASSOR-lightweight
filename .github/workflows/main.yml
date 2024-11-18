@@ -7,7 +7,7 @@ on:
     paths:
       - 'client/dist/**'
       - 'server/server.js'
-      - './github/workflows/main.yml'
+      - '.github/workflows/main.yml'
 
 jobs:
   deploy:
