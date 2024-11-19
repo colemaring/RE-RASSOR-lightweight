@@ -5,11 +5,23 @@ html, body {
   width: 100%;
   height: 100%;
 }
-
 .streamContainer {
   margin: 1vw;
   overflow: hidden;
 }
+
+.videoStreamContainer {
+  margin-left: 0vw;
+  margin-right: 0vw;
+}
+
+@media (min-width: 1300px) {
+  .videoStreamContainer {
+    margin-left: calc((100vw - (100vh * 4 / 3)) / 2);
+    margin-right: calc((100vw - (100vh * 4 / 3)) / 2);
+  }
+}
+
 
 .streamImage {
   width: 100%;
