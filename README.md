@@ -9,11 +9,11 @@ Documentation, assembly, and notes found here: [Drive link](https://drive.google
 
 # Setup:
 1. Download and open roverclient.ino with Arduino IDE <br>
-2. Change the following variables to match your network, and choose a custom rover name <br>
+2. Change the following variables to match your network, and choose a custom rover name and secret <br>
 ```
 const char* ssid = "yourssid";
 const char *password = "yourpassword";
-const char *url = "/?name=yournamehere";
+const char *url = "/?name=yournamehere&yoursecrethere";
 ```
 3. Follow [these instructions](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/) to add esp32 board to the IDE <br>
 4. Install the following libraries (latest version is fine) <br>
