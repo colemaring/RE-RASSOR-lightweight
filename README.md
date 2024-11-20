@@ -8,18 +8,18 @@ Documentation, assembly, and notes found here: [Drive link](https://drive.google
 - Real-time video feed and visualization of on-board telemetry <br>
 
 # Setup:
-download and open roverclient.ino with Arduino IDE <br>
-change the following variables to match your network, and choose a custom rover name <br>
+1. Download and open roverclient.ino with Arduino IDE <br>
+2. Change the following variables to match your network, and choose a custom rover name <br>
 ```
 const char* ssid = "yourssid";
 const char *password = "yourpassword";
 const char *url = "/?name=yournamehere";
 ```
-follow [these instructions](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/) to add esp32 board to the IDE <br>
-install the following libraries (latest version is fine) <br>
+3. Follow [these instructions](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/) to add esp32 board to the IDE <br>
+4. Install the following libraries (latest version is fine) <br>
 ![Screenshot 2024-11-20 092453](https://github.com/user-attachments/assets/596812a8-027c-4a6e-9189-372605152751)<br>
-plug in the esp32, select esp32 dev module as the board, and select the corresponding com port <br>
-upload the sketch <br>
+5. Plug in the esp32, select esp32 dev module as the board, and select the corresponding com port <br>
+6. Upload the sketch <br>
 assuming that the network you provided has internet, you should see the rover listed on rerassor.com <br>
 
 # ONLY IF you are to host YOUR OWN server, follow these steps:
