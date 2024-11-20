@@ -8,7 +8,7 @@ const char *ssid = "ExolithLab";
 const char *password = "";
 const char *host = "rerassor.com";
 const uint16_t port = 8080;
-const char *url = "/?name=testrover";
+const char *url = "/?name=testrover&secret=123";
 const char *protocol = "ws";
 
 WiFiClient client;
