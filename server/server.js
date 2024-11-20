@@ -12,11 +12,10 @@ const SSLkey = process.env.SSL_KEY;
 const SSLcert = process.env.SSL_CERT;
 const SSLkeypath = process.env.SSL_KEYPATH;
 const SSLcertpath = process.env.SSL_CERTPATH;
-console.log("hedllo");
 let httpsServer, httpServer, options;
 
 if (!isDev) {
-  // production server with ssl and http redirect asdf
+  // production server with ssl and http redirect
 
   // droplet server
   if (SSLcertpath) {
@@ -89,14 +88,16 @@ wss.on("connection", (ws, req) => {
   const query = req.url.split("?")[1];
   const params = new URLSearchParams(query);
   const name = params.get("name");
+  const secret = params.get("secret");
 
-  // Store the client name
+  // Store the client name and secret
   ws.clientName = name;
+  ws.clientSecret = secret;
 
   // null name is broswer client, which shouldnt be added to list
   if (name != null || name == "") {
-    if (!connectedClients.includes(name)) {
-      connectedClients.push(name);
+    if (!connectedClients.some((client) => client.name === name)) {
+      connectedClients.push({ name, secret });
     }
     console.log(`Client connected: ${name}`);
   }
@@ -107,11 +108,11 @@ wss.on("connection", (ws, req) => {
     ws.pingTimeoutId = setTimeout(() => {
       if (
         ws.readyState === WebSocket.OPEN &&
-        connectedClients.includes(ws.clientName)
+        connectedClients.some((client) => client.name === ws.clientName)
       ) {
         // Client didn't respond to ping, remove from connected clients and terminate connection
         connectedClients = connectedClients.filter(
-          (client) => client !== ws.clientName
+          (client) => client.name !== ws.clientName
         );
         console.log(`Client disconnected (unresponsive): ${ws.clientName}`);
 
@@ -147,7 +148,10 @@ wss.on("connection", (ws, req) => {
   wss.clients.forEach((client) => {
     if (client !== ws && client.readyState === WebSocket.OPEN) {
       client.send(
-        JSON.stringify({ type: "connectedClients", clients: connectedClients })
+        JSON.stringify({
+          type: "connectedClients",
+          clients: connectedClients,
+        })
       );
     }
   });
@@ -157,7 +161,10 @@ wss.on("connection", (ws, req) => {
     if (data.type === "getConnectedClients") {
       // Send the current list of connected rovers to the client
       ws.send(
-        JSON.stringify({ type: "connectedClients", clients: connectedClients })
+        JSON.stringify({
+          type: "connectedClients",
+          clients: connectedClients,
+        })
       );
     }
     if (data.type === "move") {
@@ -214,10 +221,12 @@ wss.on("connection", (ws, req) => {
   ws.on("close", () => {
     // Remove client name from the array
     connectedClients = connectedClients.filter(
-      (client) => client !== ws.clientName
+      (client) => client.name !== ws.clientName
     );
     console.log(`Client disconnected: ${name}`);
-    console.log(`Connected clients: ${connectedClients}`);
+    console.log(
+      `Connected clients: ${connectedClients.map((client) => client.name)}`
+    );
 
     wss.clients.forEach((client) => {
       if (client.clientName === ws.clientName && client !== ws) {
@@ -243,9 +252,11 @@ wss.on("connection", (ws, req) => {
     console.error("Client error:", error);
     // Remove client name from the array
     connectedClients = connectedClients.filter(
-      (client) => client !== ws.clientName
+      (client) => client.name !== ws.clientName
     );
-    console.log(`Connected clients: ${connectedClients}`);
+    console.log(
+      `Connected clients: ${connectedClients.map((client) => client.name)}`
+    );
 
     // Broadcast connected clients to all connected clients
     wss.clients.forEach((client) => {
