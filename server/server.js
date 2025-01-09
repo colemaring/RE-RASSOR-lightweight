@@ -15,7 +15,7 @@ const SSLcertpath = process.env.SSL_CERTPATH;
 let httpsServer, httpServer, options;
 
 if (!isDev) {
-  // production server with ssl and http redirect
+  // production server with ssl and http redirect test
 
   // droplet server
   if (SSLcertpath) {
