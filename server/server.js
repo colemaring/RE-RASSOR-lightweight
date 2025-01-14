@@ -191,23 +191,6 @@ wss.on("connection", (ws, req) => {
           client.send(JSON.stringify({ type: "speed", speed: data.speed }));
         }
       });
-    } else if (data.type === "imuData") {
-      // send to the browser client connected to the same rover
-      wss.clients.forEach((client) => {
-        if (
-          client !== ws &&
-          client.readyState === WebSocket.OPEN &&
-          client.clientName == null // Match the rover name
-        ) {
-          client.send(
-            JSON.stringify({
-              type: "imuData",
-              roverName: data.roverName,
-              data: data.data,
-            })
-          );
-        }
-      });
     }
   });
 
