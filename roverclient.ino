@@ -15,18 +15,18 @@ WiFiClient client;
 WebSocketsClient ws;
 
 // stepper motor pins
-#define dirPinFrontLeft 1
+#define dirPinFrontLeft 32
 #define stepPinFrontLeft 22
-#define dirPinFrontRight 21
-#define stepPinFrontRight 3
-#define dirPinRearLeft 15
-#define stepPinRearLeft 2
-#define dirPinRearRight 17
-#define stepPinRearRight 5
-#define EN_PIN1 23 // LOW: Driver enabled. HIGH: Driver disabled
-#define EN_PIN2 19 // LOW: Driver enabled. HIGH: Driver disabled
-#define EN_PIN3 16 // LOW: Driver enabled. HIGH: Driver disabled
-#define EN_PIN4 18 // LOW: Driver enabled. HIGH: Driver disabled
+#define dirPinFrontRight 25
+#define stepPinFrontRight 26
+#define dirPinRearLeft 13
+#define stepPinRearLeft 12
+#define dirPinRearRight 16
+#define stepPinRearRight 4
+#define EN_PIN1 33 // LOW: Driver enabled. HIGH: Driver disabled
+#define EN_PIN2 27 // LOW: Driver enabled. HIGH: Driver disabled
+#define EN_PIN3 14 // LOW: Driver enabled. HIGH: Driver disabled
+#define EN_PIN4 5 // LOW: Driver enabled. HIGH: Driver disabled
 #define motorInterfaceType 1
 
 TMC2208Stepper driver1 = TMC2208Stepper(&Serial1);
