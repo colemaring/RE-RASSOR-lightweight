@@ -12,20 +12,18 @@ import Location from "./pages/Location";
 import { DarkModeProvider } from "./context/DarkContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <DarkModeProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          {/* <Route path="/about" element={<About />} /> */}
-          <Route path="/resources" element={<Resources />} />
-          <Route path="/media" element={<Media />} />
-          <Route path="/graphs" element={<Graphs />} />
-          <Route path="/binstream" element={<BinStream />} />
-          <Route path="/fpvstream" element={<FPVStream />} />
-          <Route path="/location" element={<Location />} />
-        </Routes>
-      </BrowserRouter>
-    </DarkModeProvider>
-  </React.StrictMode>
+  <DarkModeProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        {/* <Route path="/about" element={<About />} /> */}
+        <Route path="/resources" element={<Resources />} />
+        <Route path="/media" element={<Media />} />
+        <Route path="/graphs" element={<Graphs />} />
+        <Route path="/binstream" element={<BinStream />} />
+        <Route path="/fpvstream" element={<FPVStream />} />
+        <Route path="/location" element={<Location />} />
+      </Routes>
+    </BrowserRouter>
+  </DarkModeProvider>
 );
