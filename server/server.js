@@ -83,6 +83,24 @@ else wss = new WebSocket.Server({ noServer: true });
 
 let connectedClients = [];
 
+// Broadcast connected clients to all connected clients
+function broadcastConnectedClientsToBrowsers(wss, ws) {
+  wss.clients.forEach((client) => {
+    if (
+      !client.clientName &&
+      client !== ws &&
+      client.readyState === WebSocket.OPEN
+    ) {
+      client.send(
+        JSON.stringify({
+          type: "connectedClients",
+          clients: connectedClients,
+        })
+      );
+    }
+  });
+}
+
 // When a connection to a a client is established
 wss.on("connection", (ws, req) => {
   const query = req.url.split("?")[1];
@@ -123,17 +141,7 @@ wss.on("connection", (ws, req) => {
           }
         });
 
-        // Broadcast connected clients to all connected clients
-        wss.clients.forEach((client) => {
-          if (client !== ws && client.readyState === WebSocket.OPEN) {
-            client.send(
-              JSON.stringify({
-                type: "connectedClients",
-                clients: connectedClients,
-              })
-            );
-          }
-        });
+        broadcastConnectedClientsToBrowsers(wss, ws);
         clearInterval(pingIntervalId); // Stop the ping interval
       }
     }, 5000);
@@ -144,17 +152,7 @@ wss.on("connection", (ws, req) => {
     clearTimeout(ws.pingTimeoutId);
   });
 
-  // Broadcast connected clients to all connected clients
-  wss.clients.forEach((client) => {
-    if (client !== ws && client.readyState === WebSocket.OPEN) {
-      client.send(
-        JSON.stringify({
-          type: "connectedClients",
-          clients: connectedClients,
-        })
-      );
-    }
-  });
+  broadcastConnectedClientsToBrowsers(wss, ws);
 
   ws.on("message", (message) => {
     const data = JSON.parse(message);
@@ -189,6 +187,25 @@ wss.on("connection", (ws, req) => {
           client.clientName === ws.clientName
         ) {
           client.send(JSON.stringify({ type: "speed", speed: data.speed }));
+        }
+      });
+    } else if (data.type === "IMU") {
+      // Relay the IMU message to the browser clients
+      wss.clients.forEach((client) => {
+        if (
+          client !== ws &&
+          client.readyState === WebSocket.OPEN &&
+          // Only browser clients (clientName is undefined or falsy)
+          !client.clientName
+        ) {
+          client.send(
+            JSON.stringify({
+              type: "IMU",
+              yaw: data.yaw,
+              pitch: data.pitch,
+              roll: data.roll,
+            })
+          );
         }
       });
     }
@@ -234,17 +251,7 @@ wss.on("connection", (ws, req) => {
       }
     });
 
-    // Broadcast connected clients to all connected clients
-    wss.clients.forEach((client) => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(
-          JSON.stringify({
-            type: "connectedClients",
-            clients: connectedClients,
-          })
-        );
-      }
-    });
+    broadcastConnectedClientsToBrowsers(wss, ws);
   });
 
   // Handle client errors
@@ -258,17 +265,7 @@ wss.on("connection", (ws, req) => {
       `Connected clients: ${connectedClients.map((client) => client.name)}`
     );
 
-    // Broadcast connected clients to all connected clients
-    wss.clients.forEach((client) => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(
-          JSON.stringify({
-            type: "connectedClients",
-            clients: connectedClients,
-          })
-        );
-      }
-    });
+    broadcastConnectedClientsToBrowsers(wss, ws);
   });
 });
 if (!isDev) {
