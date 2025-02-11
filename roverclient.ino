@@ -1,8 +1,10 @@
 #include <WiFi.h>
+#include <Wire.h>
 #include <WebSocketsClient.h>
 #include <TMC2208Stepper.h>
 #include <ArduinoJson.h>
 #include <math.h>
+#include <MPU9250.h>
 
 const char *ssid = "ExolithLab";
 const char *password = "";
@@ -11,6 +13,7 @@ const uint16_t port = 8080;
 const char *url = "/?name=testrover&secret=123";
 const char *protocol = "ws";
 
+MPU9250 mpu;
 WiFiClient client;
 WebSocketsClient ws;
 
@@ -128,10 +131,17 @@ void setup()
     }
     Serial.println("Connected to WiFi");
 
+    Wire.begin(2, 15); // SDA, SCL - adjust if needed
+    delay(200);
+    mpu.setup(0x68); // I2C address of MPU9250
+
     // connect to WebSocket server
     ws.begin(host, port, url, protocol);
     ws.onEvent(onWsEvent);
 }
+
+int count = 0;
+int count2 = 0;
 
 void loop()
 {
@@ -178,6 +188,40 @@ void loop()
             ws.begin(host, port, url, protocol);
         }
     }
+
+  // using two independent counters because if the mpu isnt sampled frequently 
+  // enough, it will be noisy, yet I dont want to send data too often.
+  if (mpu.update())
+  {
+    if (count % 10 == 0)
+    {   
+      float yaw = mpu.getYaw();
+      float pitch = mpu.getPitch();
+      float roll = mpu.getRoll();
+      if (count2 % 25 == 0)
+      {
+        DynamicJsonDocument jsonDoc(256);
+
+        jsonDoc["type"] = "IMU";
+        jsonDoc["url"] = url;
+        jsonDoc["yaw"] = yaw;
+        jsonDoc["pitch"] = pitch;
+        jsonDoc["roll"] = roll;
+
+        String jsonString;  
+        serializeJson(jsonDoc, jsonString); 
+        // Serial.println("sent: " + jsonString);
+        ws.sendTXT(jsonString); 
+        count2 = 0;
+      }
+     
+      
+      
+       count = 0;
+    }
+  count++;
+   count2++;
+  }
 }
 
 void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
