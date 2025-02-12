@@ -7,16 +7,17 @@ const WebSocket = require("ws");
 const path = require("path");
 Stream = require("node-rtsp-stream");
 
+// Optional params for ssl on production
 const isDev = process.env.NODE_ENV === "dev";
 const SSLkey = process.env.SSL_KEY;
 const SSLcert = process.env.SSL_CERT;
 const SSLkeypath = process.env.SSL_KEYPATH;
 const SSLcertpath = process.env.SSL_CERTPATH;
+const rtsp_url_bin = process.env.RTSP_URL_BIN;
+
 let httpsServer, httpServer, options;
 
 if (!isDev) {
-  // production server with ssl and http redirect test
-
   // droplet server
   if (SSLcertpath) {
     options = {
@@ -57,9 +58,10 @@ if (!isDev) {
 }
 
 // RTSP stream handler
+// maybe store this in a .env
 stream = new Stream({
   name: "name",
-  streamUrl: "rtsp://admin:123456@108.188.73.13:1081/stream1",
+  streamUrl: rtsp_url_bin,
   wsPort: 9999,
   ffmpegOptions: {
     // options ffmpeg flags
@@ -107,17 +109,26 @@ wss.on("connection", (ws, req) => {
   const params = new URLSearchParams(query);
   const name = params.get("name");
   const secret = params.get("secret");
+  const clientType = params.get("clientType");
 
   // Store the client name and secret
   ws.clientName = name;
   ws.clientSecret = secret;
+  ws.clientType = clientType;
+  if (name == null) {
+    console.log("Browser listening for connected clients");
+  } else if (clientType == null) {
+    console.log(`rover connected: ${name}`);
+  } else if (clientType === "browser") {
+    console.log(`browser connected to: ${name}`);
+  }
 
   // null name is broswer client, which shouldnt be added to list
-  if (name != null || name == "") {
+  if (name != null) {
+    console.log("whose connecting");
     if (!connectedClients.some((client) => client.name === name)) {
       connectedClients.push({ name, secret });
     }
-    console.log(`Client connected: ${name}`);
   }
 
   // Set up ping interval
@@ -190,17 +201,28 @@ wss.on("connection", (ws, req) => {
         }
       });
     } else if (data.type === "IMU") {
-      // Relay the IMU message to the browser clients
+      // Parse the URL to extract the name parameter
+      let clientNameFromUrl = null;
+      if (data.url) {
+        const parts = data.url.split("?");
+        if (parts.length > 1) {
+          const params = new URLSearchParams(parts[1]);
+          clientNameFromUrl = params.get("name");
+        }
+      }
+
+      // Relay the IMU message to the browser client whose name matches clientNameFromUrl
       wss.clients.forEach((client) => {
         if (
           client !== ws &&
           client.readyState === WebSocket.OPEN &&
-          // Only browser clients (clientName is undefined or falsy)
-          !client.clientName
+          client.clientType === "browser" &&
+          client.clientName === clientNameFromUrl
         ) {
           client.send(
             JSON.stringify({
               type: "IMU",
+              name: clientNameFromUrl,
               yaw: data.yaw,
               pitch: data.pitch,
               roll: data.roll,
