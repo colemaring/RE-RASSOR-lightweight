@@ -26,10 +26,10 @@ export const WebSocketsProvider = ({ children }) => {
     // Use the query param connection when connected if it
     // otherwise get new list of connected clients
     const wsUrl = connected
-      ? `ws://localhost:8080/?name=${encodeURIComponent(
+      ? `wss://rerassor.com/?name=${encodeURIComponent(
           connected
         )}&clientType=browser`
-      : "ws://localhost:8080";
+      : "wss://rerassor.com";
     const wsInstance = new WebSocket(wsUrl);
     setWs(wsInstance);
 
