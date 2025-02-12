@@ -16,7 +16,7 @@ const char *password = "yourpassword";
 const char *url = "/?name=yournamehere&yoursecrethere";
 ```
 3. Follow [these instructions](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/) to add esp32 board to the IDE <br>
-4. Install the following libraries (latest version is fine) <br>
+4. Install the following libraries (latest version is fine) (needs updated to include MPU9250 lib) <br>
 ![Screenshot 2024-11-20 092453](https://github.com/user-attachments/assets/596812a8-027c-4a6e-9189-372605152751)<br>
 5. Plug in the esp32, select esp32 dev module as the board, and select the corresponding com port <br>
 6. Upload the sketch <br>
@@ -37,7 +37,7 @@ EC2, if you don't know what this does, ignore it<br>
 
 
 # TODO:
-CI/CD w Docker on AWS <br>
-new PCB with IMU, more TMC2208 slots, integrated buck converter, and camera connector? <br>
+change type of message to "INFO" and pass in IMU, latency, current wheel speed, etc <br>
+implement camera feed into WSS stream <br>
 lower turning speed <br>
-implement IMU and camera feed into WSS stream <br>
+CI/CD w Docker on AWS <br>
