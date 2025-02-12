@@ -58,7 +58,6 @@ if (!isDev) {
 }
 
 // RTSP stream handler
-// maybe store this in a .env
 stream = new Stream({
   name: "name",
   streamUrl: rtsp_url_bin,
@@ -85,7 +84,8 @@ else wss = new WebSocket.Server({ noServer: true });
 
 let connectedClients = [];
 
-// Broadcast connected clients to all connected clients
+// Broadcast connected clients to browsers (null clientNames)
+// Called frequently to keep browsers updated
 function broadcastConnectedClientsToBrowsers(wss, ws) {
   wss.clients.forEach((client) => {
     if (
@@ -115,6 +115,8 @@ wss.on("connection", (ws, req) => {
   ws.clientName = name;
   ws.clientSecret = secret;
   ws.clientType = clientType;
+
+  // Log the connection
   if (name == null) {
     console.log("Browser listening for connected clients");
   } else if (clientType == null) {
@@ -125,7 +127,6 @@ wss.on("connection", (ws, req) => {
 
   // null name is broswer client, which shouldnt be added to list
   if (name != null) {
-    console.log("whose connecting");
     if (!connectedClients.some((client) => client.name === name)) {
       connectedClients.push({ name, secret });
     }
@@ -165,8 +166,10 @@ wss.on("connection", (ws, req) => {
 
   broadcastConnectedClientsToBrowsers(wss, ws);
 
+  // Handle incoming messages
   ws.on("message", (message) => {
     const data = JSON.parse(message);
+
     if (data.type === "getConnectedClients") {
       // Send the current list of connected rovers to the client
       ws.send(
@@ -175,14 +178,13 @@ wss.on("connection", (ws, req) => {
           clients: connectedClients,
         })
       );
-    }
-    if (data.type === "move") {
-      // Relay the move message to the connected client
+    } else if (data.type === "move") {
+      // Relay the move message to the connected client whose name matches the rover name
+      const roverName = data.rover;
       wss.clients.forEach((client) => {
         if (
-          client !== ws &&
           client.readyState === WebSocket.OPEN &&
-          client.clientName === ws.clientName
+          client.clientName === roverName
         ) {
           client.send(
             JSON.stringify({ type: "move", direction: data.direction })
@@ -190,12 +192,12 @@ wss.on("connection", (ws, req) => {
         }
       });
     } else if (data.type === "speed") {
-      // Relay the move message to the connected client
+      // Relay the speed message to the connected client whose name matches the rover name
+      const roverName = data.rover;
       wss.clients.forEach((client) => {
         if (
-          client !== ws &&
           client.readyState === WebSocket.OPEN &&
-          client.clientName === ws.clientName
+          client.clientName === roverName
         ) {
           client.send(JSON.stringify({ type: "speed", speed: data.speed }));
         }
@@ -210,7 +212,6 @@ wss.on("connection", (ws, req) => {
           clientNameFromUrl = params.get("name");
         }
       }
-
       // Relay the IMU message to the browser client whose name matches clientNameFromUrl
       wss.clients.forEach((client) => {
         if (
@@ -228,29 +229,6 @@ wss.on("connection", (ws, req) => {
               roll: data.roll,
             })
           );
-        }
-      });
-    }
-  });
-
-  // send move message to appropriate rover client
-  ws.on("message", (message) => {
-    const data = JSON.parse(message);
-    const roverName = data.rover;
-    if (data.type === "move") {
-      // Relay the move message to the connected client where clientName matches roverName
-      wss.clients.forEach((client) => {
-        if (client.clientName === roverName) {
-          client.send(
-            JSON.stringify({ type: "move", direction: data.direction })
-          );
-        }
-      });
-    } else if (data.type === "speed") {
-      // Relay the move message to the connected client where clientName matches roverName
-      wss.clients.forEach((client) => {
-        if (client.clientName === roverName) {
-          client.send(JSON.stringify({ type: "speed", speed: data.speed }));
         }
       });
     }
