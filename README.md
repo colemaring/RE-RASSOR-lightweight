@@ -41,3 +41,6 @@ change type of message to "INFO" and pass in IMU, latency, current wheel speed, 
 implement camera feed into WSS stream <br>
 lower turning speed <br>
 CI/CD w Docker on AWS <br>
+
+# Notes/Troubleshooting:
+If Arduino IDE error about entering flash mode, unplug IMU connections. see (https://randomnerdtutorials.com/esp32-pinout-reference-gpios/). GPIO 2 connected to on-board LED, must be left floating or LOW to enter flashing mode.
