@@ -8,23 +8,30 @@ const ConnectedClients = ({ setConnected, connected, ws }) => {
   const [secrets, setSecrets] = useState({});
 
   useEffect(() => {
-    // Send a message to the WebSocket server to retrieve the current list of connected rovers
-    ws.onopen = () => {
-      ws.send(JSON.stringify({ type: "getConnectedClients" }));
-    };
+    if (!ws) return;
 
-    // Handle incoming messages
-    ws.onmessage = (event) => {
+    const handleMessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "connectedClients") {
         setClients(data.clients || []);
-        // console.log(`Connected clients: ${data.clients}`);
       }
     };
 
-    // Handle connection error
-    ws.onerror = (event) => {
+    const handleError = (event) => {
       console.error("WebSocket error:", event);
+    };
+
+    ws.addEventListener("message", handleMessage);
+    ws.addEventListener("error", handleError);
+
+    const intervalId = setInterval(() => {
+      ws.send(JSON.stringify({ type: "getConnectedClients" }));
+    }, 1000);
+
+    return () => {
+      ws.removeEventListener("message", handleMessage);
+      ws.removeEventListener("error", handleError);
+      clearInterval(intervalId);
     };
   }, [ws]);
 
@@ -34,14 +41,34 @@ const ConnectedClients = ({ setConnected, connected, ws }) => {
     }
   }, [clients, connected, setConnected]);
 
+  useEffect(() => {
+    const storedRoverName = localStorage.getItem("roverName");
+
+    if (storedRoverName && clients.length > 0) {
+      const roverToConnect = clients.find(
+        (client) => client.name === storedRoverName
+      );
+
+      if (roverToConnect) {
+        setConnected(roverToConnect.name);
+        setSecrets((prevSecrets) => ({
+          ...prevSecrets,
+          [roverToConnect.name]: roverToConnect.secret || "", // Pre-fill secret if available
+        }));
+      }
+    }
+  }, [clients, setConnected]); // This useEffect runs when clients change or the component mounts
+
   const handleConnect = (client) => {
     if (connected === client.name) {
       console.log(`Disconnecting from ${client.name}`);
       setConnected(null);
       setSecrets({});
+      localStorage.removeItem("roverName"); // Remove from localStorage on disconnect
     } else {
       console.log(`Connecting to ${client.name}`);
       setConnected(client.name);
+      localStorage.setItem("roverName", client.name); // Store in localStorage
     }
   };
 

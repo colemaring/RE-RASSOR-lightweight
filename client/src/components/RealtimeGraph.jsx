@@ -1,66 +1,29 @@
 import React from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-// Functions to generate placeholder data streams
+const RealtimeGraph = () => {
+  // Initialize dataset as an empty array so the graph is empty.
+  const [dataset] = useState([]);
 
-// Function to generate the initial dataset
-const generateInitialDataset = () => {
-  const initialDataset = [];
-  for (let i = 0; i < 10; i++) {
-    initialDataset.push({ x: i, y: Math.floor(Math.random() * 20) + 10 });
-  }
-  return initialDataset;
-};
-
-// Function to create a data stream
-const generateDataStream = (setDataset) => {
-  let xValue = 10; // Start xValue after the initial dataset
-  const intervalId = setInterval(() => {
-    setDataset((prevDataset) => {
-      const newDataset = [
-        ...prevDataset.slice(1), // Remove the first element to maintain dataset size
-        { x: xValue++, y: Math.floor(Math.random() * 20) + 10 }, // Add new data with unique x
-      ];
-      return newDataset;
-    });
-  }, 1000); // Update the chart every 1 second
-
-  return () => clearInterval(intervalId); // Clear the interval when the component unmounts
-};
-
-const RealtimeGraph = ({ name }) => {
-  const [dataset, setDataset] = useState(generateInitialDataset());
-
-  useEffect(() => {
-    const clearStream = generateDataStream(setDataset);
-    return () => clearStream(); // Clear the interval on component unmount
-  }, []);
-
-  let color = "black";
-  if (name === "graph1") {
-    color = "black";
-  } else if (name === "graph2") {
-    color = "blue";
-  } else if (name === "Latency") {
-    color = "green";
-  } else if (name === "graph4") {
-    color = "purple";
-  }
+  // IDEA
+  // for round trip latency we could just have the server send the current time to
+  // any esp32 connected client, and the esp32 will send that same time back to the server,
+  // and the server will do the math to determine the round trip latency.
+  // what isnt considered here is the fact that we are sending data back to the server
+  // on a fixed delay in a loop, so that is added delay which doesnt actually exist, which we could
+  // actually subtract.
 
   return (
     <div>
       <LineChart
         dataset={dataset}
         xAxis={[{ dataKey: "x" }]} // x-axis is mapped to 'x'
-        yAxis={[{ min: 0, max: 40 }]}
-        series={[{ dataKey: "y", label: name || "Data", color: color }]} // y-axis is mapped to 'y'
+        yAxis={[{ min: 0, max: 10 }]}
+        series={[{ dataKey: "y", label: "Wheel speed", color: "blue" }]}
         height={300}
         margin={{ left: 30, right: 30, top: 30, bottom: 30 }}
-        grid={{
-          horizontal: true,
-          vertical: true,
-        }}
+        grid={{ vertical: true, horizontal: true }}
         skipAnimation
       />
     </div>

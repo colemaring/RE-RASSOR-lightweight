@@ -1,78 +1,94 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
-import { useState, useEffect } from "react";
 
-// Functions to generate placeholder data streams
-
-// Function to generate the initial dataset
-const generateInitialDataset = () => {
-  const initialDataset = [];
-  for (let i = 0; i < 10; i++) {
-    initialDataset.push({
-      x: i,
-      y1: Math.floor(Math.random() * 3) + 12,
-      y2: Math.floor(Math.random() * 3) + 8,
-      y3: Math.floor(Math.random() * 3) + 30,
-    });
-  }
-  return initialDataset;
-};
-
-// Function to create a data stream
-const generateDataStream = (setDataset) => {
-  let xValue = 10; // Start xValue after the initial dataset
-  const intervalId = setInterval(() => {
-    setDataset((prevDataset) => {
-      const newDataset = [
-        ...prevDataset.slice(1), // Remove the first element to maintain dataset size
-        {
-          x: xValue++,
-          y1: Math.floor(Math.random() * 8) + 12,
-          y2: Math.floor(Math.random() * 3) + 8,
-          y3: Math.floor(Math.random() * 10) + 30,
-        }, // Add new data with unique x
-      ];
-      return newDataset;
-    });
-  }, 1000); // Update the chart every 1 second
-
-  return () => clearInterval(intervalId); // Clear the interval when the component unmounts
-};
-
-const EulerGraph = () => {
-  const [dataset, setDataset] = useState(generateInitialDataset());
+const EulerGraph = ({ connected, ws }) => {
+  const [dataset, setDataset] = useState([]);
 
   useEffect(() => {
-    const clearStream = generateDataStream(setDataset);
-    return () => clearStream(); // Clear the interval on component unmount
-  }, []);
+    if (!connected || !ws) {
+      setDataset([]); // Clear dataset when not connected
+      return;
+    }
+
+    const handleIMUMessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "IMU") {
+          setDataset((prevDataset) => {
+            const newDataPoint = {
+              x:
+                prevDataset.length > 0
+                  ? prevDataset[prevDataset.length - 1].x + 1
+                  : 0, // Increment x or start at 0
+              y1: data.pitch,
+              y2: data.yaw,
+              y3: data.roll,
+            };
+
+            const maxDataPoints = 10; // Keep a rolling window of data
+            const newDataset =
+              prevDataset.length >= maxDataPoints
+                ? [...prevDataset.slice(1), newDataPoint]
+                : [...prevDataset, newDataPoint];
+            return newDataset;
+          });
+        }
+      } catch (err) {
+        console.error("Error parsing message:", err);
+      }
+    };
+
+    ws.addEventListener("message", handleIMUMessage);
+
+    return () => {
+      ws.removeEventListener("message", handleIMUMessage);
+    };
+  }, [connected, ws]);
+
+  if (!connected) {
+    return (
+      <div>
+        <LineChart
+          dataset={[]}
+          xAxis={[{ dataKey: "x" }]}
+          yAxis={[{ min: -180, max: 180 }]}
+          series={[]}
+          height={300}
+          margin={{ left: 30, right: 30, top: 30, bottom: 30 }}
+          grid={{ vertical: true, horizontal: true }}
+          skipAnimation
+        />
+      </div>
+    );
+  }
 
   return (
     <div>
+      <h3>IMU Data</h3>
       <LineChart
         dataset={dataset}
-        xAxis={[{ dataKey: "x" }]} // x-axis is mapped to 'x'
-        yAxis={[{ min: 0, max: 40 }]}
+        xAxis={[{ dataKey: "x" }]}
+        yAxis={[{ min: -180, max: 180 }]}
         series={[
           {
             dataKey: "y1",
-            label: `Pitch` || "Data 1",
+            label: "Pitch",
             color: "black",
             showDots: false,
           },
           {
             dataKey: "y2",
-            label: `Yaw` || "Data 2",
+            label: "Yaw",
             color: "red",
             showDots: false,
           },
           {
             dataKey: "y3",
-            label: `Roll` || "Data 3",
+            label: "Roll",
             color: "blue",
             showDots: false,
           },
-        ]} // y-axis is mapped to 'y1', 'y2', and 'y3'
+        ]}
         height={300}
         margin={{ left: 30, right: 30, top: 30, bottom: 30 }}
         grid={{ vertical: true, horizontal: true }}

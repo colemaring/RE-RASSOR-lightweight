@@ -4,9 +4,9 @@ import RealtimeGraph from "../components/RealtimeGraph";
 import EulerGraph from "../components/EulerGraph";
 import WheelspeedGraph from "../components/WheelspeedGraph";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { useState, useEffect } from "react";
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { DarkModeContext } from "../context/DarkContext";
+import { WebSocketsContext } from "../context/WebSocketsContext";
 
 const darkTheme = createTheme({
   palette: {
@@ -22,13 +22,13 @@ const lightTheme = createTheme({
 
 const Graphs = () => {
   const { darkMode } = useContext(DarkModeContext);
-
+  const { connected, setConnected, ws } = useContext(WebSocketsContext);
   return (
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <MyNavbar />
       <div className="graphsContainer">
         <div className="graph1Container">
-          <EulerGraph />
+          <EulerGraph connected={connected} ws={ws} />
         </div>
         <div className="graph2Container">
           <WheelspeedGraph />

@@ -9,9 +9,11 @@ import GitHubLight from "../assets/github-mark-white.png";
 import GitHubDark from "../assets/github-mark.png";
 import { DarkModeContext } from "../context/DarkContext";
 import { useContext } from "react";
+import { WebSocketsContext } from "../context/WebSocketsContext";
 
 function MyNavbar() {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
+  const { connected, setConnected, ws } = useContext(WebSocketsContext);
   return (
     <Navbar expand="lg" className="bg-body-tertiary no-margin-padding">
       <Container>
@@ -45,6 +47,9 @@ function MyNavbar() {
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
+        <span>
+          {connected ? `Connected to ${connected}` : "Not connected to rover"}
+        </span>
 
         <DarkModeToggle />
         <a
