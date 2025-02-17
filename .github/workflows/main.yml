@@ -10,6 +10,12 @@ on:
       - '.github/workflows/main.yml'
 
 jobs:
+  test:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Echo Secret
+          run: |
+            echo "RTSP_URL_BIN: ${{ secrets.RTSP_URL_BIN }}"
   deploy:
     runs-on: ubuntu-latest
     steps:
