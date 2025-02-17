@@ -172,6 +172,7 @@ wss.on("connection", (ws, req) => {
 
     if (data.type === "getConnectedClients") {
       // Send the current list of connected rovers to the client
+      console.log("getConnectedClients recieved");
       ws.send(
         JSON.stringify({
           type: "connectedClients",
