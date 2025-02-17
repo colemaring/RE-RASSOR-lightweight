@@ -10,12 +10,6 @@ on:
       - '.github/workflows/main.yml'
 
 jobs:
-  test:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Echo Secret
-          run: |
-            echo "RTSP_URL_BIN: ${{ secrets.RTSP_URL_BIN }}"
   deploy:
     runs-on: ubuntu-latest
     steps:
@@ -37,7 +31,5 @@ jobs:
             cd RE-RASSOR-lightweight
             cd server
             npm i 
-            export RTSP_URL_BIN="$RTSP_URL_BIN"
-            echo "RTSP_URL_BIN: $RTSP_URL_BIN"
-            NODE_ENV=production SSL_KEYPATH=/etc/letsencrypt/live/rerassor.com/privkey.pem SSL_CERTPATH=/etc/letsencrypt/live/rerassor.com/fullchain.pem pm2 start server.js
+            RTSP_URL_BIN="$RTSP_URL_BIN" NODE_ENV=production SSL_KEYPATH=/etc/letsencrypt/live/rerassor.com/privkey.pem SSL_CERTPATH=/etc/letsencrypt/live/rerassor.com/fullchain.pem pm2 start server.js
             docker stop rtsp-to-web && docker rm rtsp-to-web && docker run -d --name rtsp-to-web -v $(pwd)/config.json:/config/config.json -v /etc/letsencrypt/live/rerassor.com/fullchain.pem:/config/server.crt -v /etc/letsencrypt/live/rerassor.com/privkey.pem:/config/server.key -p 8083:8083 -p 8084:8084 --restart always ghcr.io/deepch/rtsptoweb:latest &
