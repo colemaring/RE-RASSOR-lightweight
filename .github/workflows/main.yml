@@ -19,7 +19,7 @@ jobs:
           NODE_ENV: production
           SSL_KEY: /etc/letsencrypt/live/rerassor.com/privkey.pem
           SSL_CERT: /etc/letsencrypt/live/rerassor.com/fullchain.pem
-          RTSP_URL_BIN: ${{ secrets.RTSP_URL_BIN }}
+          RTSP_URL_BIN: ${{ secrets.RTSP_URL_BIN  }}
         with:
           host: ${{ secrets.DIGITALOCEAN_DROPLET_IP_RASSOR }}
           username: ${{ secrets.DIGITALOCEAN_DROPLET_USERNAME_RASSOR  }}
