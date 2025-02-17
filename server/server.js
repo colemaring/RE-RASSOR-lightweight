@@ -14,6 +14,7 @@ const SSLcert = process.env.SSL_CERT;
 const SSLkeypath = process.env.SSL_KEYPATH;
 const SSLcertpath = process.env.SSL_CERTPATH;
 const rtsp_url_bin = process.env.RTSP_URL_BIN;
+console.log(rtsp_url_bin);
 
 let httpsServer, httpServer, options;
 
