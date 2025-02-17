@@ -13,8 +13,7 @@ const SSLkey = process.env.SSL_KEY;
 const SSLcert = process.env.SSL_CERT;
 const SSLkeypath = process.env.SSL_KEYPATH;
 const SSLcertpath = process.env.SSL_CERTPATH;
-const rtsp_url_bin = process.env.RTSP_URL_BIN;
-console.log("RTSP_URL_BIN:", rtsp_url_bin);
+// const rtsp_url_bin = process.env.RTSP_URL_BIN;
 
 let httpsServer, httpServer, options;
 
@@ -61,7 +60,7 @@ if (!isDev) {
 // RTSP stream handler
 stream = new Stream({
   name: "name",
-  streamUrl: rtsp_url_bin,
+  streamUrl: "rtsp://admin:123456@108.188.73.13:1081/stream1",
   wsPort: 9999,
   ffmpegOptions: {
     // options ffmpeg flags
