@@ -88,6 +88,7 @@ let connectedClients = [];
 // Broadcast connected clients to browsers (null clientNames)
 // Called frequently to keep browsers updated
 function broadcastConnectedClientsToBrowsers(wss) {
+  console.log("broadcasting connected clients hit");
   wss.clients.forEach((client) => {
     if (
       client.clientType === "browser" &&
