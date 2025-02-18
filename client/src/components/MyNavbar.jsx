@@ -33,12 +33,6 @@ function MyNavbar() {
             <Nav.Link as={Link} to="/fpvstream">
               FPV Stream
             </Nav.Link>
-            <Nav.Link as={Link} to="/location">
-              Location
-            </Nav.Link>
-            {/* <Nav.Link as={Link} to="/about">
-              About
-            </Nav.Link> */}
             <Nav.Link as={Link} to="/resources">
               Resources
             </Nav.Link>

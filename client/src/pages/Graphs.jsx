@@ -7,6 +7,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { useState, useEffect, useContext } from "react";
 import { DarkModeContext } from "../context/DarkContext";
 import { WebSocketsContext } from "../context/WebSocketsContext";
+import Rover from "../components/Rover";
 
 const darkTheme = createTheme({
   palette: {
@@ -31,7 +32,7 @@ const Graphs = () => {
           <EulerGraph connected={connected} ws={ws} />
         </div>
         <div className="graph2Container">
-          <WheelspeedGraph />
+          <Rover connected={connected} />
         </div>
         <div className="graph3Container">
           <RealtimeGraph name="Latency" />
