@@ -18,6 +18,12 @@ const ConnectedClients = ({ setConnected, connected, ws }) => {
     };
 
     const handleError = (event) => {
+      if (
+        ws.readyState === WebSocket.CLOSING ||
+        ws.readyState === WebSocket.CLOSED
+      ) {
+        return;
+      }
       console.error("WebSocket error:", event);
     };
 
@@ -25,7 +31,9 @@ const ConnectedClients = ({ setConnected, connected, ws }) => {
     ws.addEventListener("error", handleError);
 
     const intervalId = setInterval(() => {
-      ws.send(JSON.stringify({ type: "getConnectedClients" }));
+      if (ws.readyState === ws.OPEN) {
+        ws.send(JSON.stringify({ type: "getConnectedClients" }));
+      }
     }, 1000);
 
     return () => {

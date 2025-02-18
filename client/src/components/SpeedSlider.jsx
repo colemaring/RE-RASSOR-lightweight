@@ -8,7 +8,6 @@ function SpeedSlider({ connected, ws }) {
   const handleSpeedChange = (event) => {
     const newSpeed = event.target.value;
     setSpeed(newSpeed);
-    console.log(`Speed changed to: ${newSpeed}`);
     ws.send(
       JSON.stringify({ rover: connected, type: "speed", speed: newSpeed })
     );

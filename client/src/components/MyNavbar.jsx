@@ -47,7 +47,7 @@ function MyNavbar() {
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
-        <span>
+        <span className="me-4">
           {connected ? `Connected to ${connected}` : "Not connected to rover"}
         </span>
 
