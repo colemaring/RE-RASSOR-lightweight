@@ -66,6 +66,7 @@ stream = new Stream({
     // options ffmpeg flags
     "-stats": "", // an option with no neccessary value uses a blank string
     "-r": 30, // options with required values specify the value after the key
+    "-loglevel": "quiet" 
   },
 });
 
