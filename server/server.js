@@ -91,8 +91,6 @@ function broadcastConnectedClientsToBrowsers(wss, ws) {
   console.log("Broadcasting connected clients to browsers");
   wss.clients.forEach((client) => {
     if (
-      !client.clientName &&
-      client !== ws &&
       client.readyState === WebSocket.OPEN
     ) {
       client.send(
