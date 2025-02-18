@@ -86,11 +86,10 @@ let connectedClients = [];
 
 // Broadcast connected clients to browsers (null clientNames)
 // Called frequently to keep browsers updated
-function broadcastConnectedClientsToBrowsers(wss, ws) {
+function broadcastConnectedClientsToBrowsers(wss) {
   wss.clients.forEach((client) => {
     if (
-      !client.clientName &&
-      client !== ws &&
+      client.clientType === "browser" &&
       client.readyState === WebSocket.OPEN
     ) {
       client.send(
@@ -132,6 +131,8 @@ wss.on("connection", (ws, req) => {
     }
   }
 
+  broadcastConnectedClientsToBrowsers(wss, ws);
+
   // Set up ping interval
   const pingIntervalId = setInterval(() => {
     ws.ping();
@@ -164,15 +165,12 @@ wss.on("connection", (ws, req) => {
     clearTimeout(ws.pingTimeoutId);
   });
 
-  broadcastConnectedClientsToBrowsers(wss, ws);
-
   // Handle incoming messages
   ws.on("message", (message) => {
     const data = JSON.parse(message);
 
     if (data.type === "getConnectedClients") {
       // Send the current list of connected rovers to the client
-      console.log("getConnectedClients recieved");
       ws.send(
         JSON.stringify({
           type: "connectedClients",
