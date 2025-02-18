@@ -66,7 +66,7 @@ stream = new Stream({
     // options ffmpeg flags
     "-stats": "", // an option with no neccessary value uses a blank string
     "-r": 30, // options with required values specify the value after the key
-    "-loglevel": "quiet" 
+    "-loglevel": "quiet",
   },
 });
 
@@ -87,11 +87,12 @@ let connectedClients = [];
 
 // Broadcast connected clients to browsers (null clientNames)
 // Called frequently to keep browsers updated
-function broadcastConnectedClientsToBrowsers(wss) {
-  console.log("broadcasting connected clients hit");
+function broadcastConnectedClientsToBrowsers(wss, ws) {
+  console.log("Broadcasting connected clients to browsers");
   wss.clients.forEach((client) => {
     if (
-      client.clientType === "browser" &&
+      !client.clientName &&
+      client !== ws &&
       client.readyState === WebSocket.OPEN
     ) {
       client.send(
