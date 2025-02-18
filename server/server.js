@@ -154,7 +154,11 @@ wss.on("connection", (ws, req) => {
         wss.clients.forEach((client) => {
           if (client.clientName === ws.clientName) {
             client.terminate();
-            console.log("Terminated client:", client.clientName);
+            console.log(
+              "Terminated client:",
+              client.clientName,
+              client.clientType
+            );
           }
         });
 
@@ -251,6 +255,7 @@ wss.on("connection", (ws, req) => {
     wss.clients.forEach((client) => {
       if (client.clientName === ws.clientName && client !== ws) {
         client.terminate();
+        console.log("Terminated client:", client.clientName, client.clientType);
       }
     });
 
