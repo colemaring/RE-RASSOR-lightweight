@@ -37,6 +37,8 @@ EC2, if you don't know what this does, ignore it<br>
 
 
 # TODO:
+apply imu data to rover <br>
+dropdown for rover theme. blue & white, UCF, black, rainbow moving  <br>
 change type of message to "INFO" and pass in IMU, latency, current wheel speed, etc <br>
 implement camera feed into WSS stream <br>
 lower turning speed <br>
