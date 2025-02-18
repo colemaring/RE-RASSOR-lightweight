@@ -88,7 +88,6 @@ let connectedClients = [];
 // Broadcast connected clients to browsers (null clientNames)
 // Called frequently to keep browsers updated
 function broadcastConnectedClientsToBrowsers(wss, ws) {
-  console.log("Broadcasting connected clients to browsers");
   wss.clients.forEach((client) => {
     if (
       !client.clientName &&
@@ -152,13 +151,11 @@ wss.on("connection", (ws, req) => {
 
         // Terminate all clients with the same name
         wss.clients.forEach((client) => {
-          if (client.clientName === ws.clientName) {
+          if (
+            client.clientName === ws.clientName &&
+            client.clientType !== "browser"
+          ) {
             client.terminate();
-            console.log(
-              "Terminated client:",
-              client.clientName,
-              client.clientType
-            );
           }
         });
 
@@ -253,9 +250,12 @@ wss.on("connection", (ws, req) => {
     );
 
     wss.clients.forEach((client) => {
-      if (client.clientName === ws.clientName && client !== ws) {
+      if (
+        client.clientName === ws.clientName &&
+        client !== ws &&
+        client.clientType !== "browser"
+      ) {
         client.terminate();
-        console.log("Terminated client:", client.clientName, client.clientType);
       }
     });
 
