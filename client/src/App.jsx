@@ -8,7 +8,8 @@ import MyNavbar from "./components/MyNavbar";
 import { WebSocketsContext } from "./context/WebSocketsContext";
 
 function App() {
-  const { connected, setConnected, ws } = useContext(WebSocketsContext);
+  const { connected, setConnected, ws, clients, secrets } =
+    useContext(WebSocketsContext);
 
   return (
     <>
@@ -17,6 +18,8 @@ function App() {
         setConnected={setConnected}
         connected={connected}
         ws={ws}
+        clients={clients}
+        secrets={secrets}
       />
       <Status connected={connected} />
       <SpeedSlider connected={connected} ws={ws} />

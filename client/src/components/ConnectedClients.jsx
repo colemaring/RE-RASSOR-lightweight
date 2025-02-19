@@ -3,70 +3,13 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/Form";
 
-const ConnectedClients = ({ setConnected, connected, ws }) => {
-  const [clients, setClients] = useState([]);
-  const [secrets, setSecrets] = useState({});
-
-  useEffect(() => {
-    if (!ws) return;
-
-    const handleMessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === "connectedClients") {
-        setClients(data.clients || []);
-      }
-    };
-
-    const handleError = (event) => {
-      if (
-        ws.readyState === WebSocket.CLOSING ||
-        ws.readyState === WebSocket.CLOSED
-      ) {
-        return;
-      }
-      console.error("WebSocket error:", event);
-    };
-
-    ws.addEventListener("message", handleMessage);
-    ws.addEventListener("error", handleError);
-
-    const intervalId = setInterval(() => {
-      if (ws.readyState === ws.OPEN) {
-        ws.send(JSON.stringify({ type: "getConnectedClients" }));
-      }
-    }, 1000);
-
-    return () => {
-      ws.removeEventListener("message", handleMessage);
-      ws.removeEventListener("error", handleError);
-      clearInterval(intervalId);
-    };
-  }, [ws]);
-
-  useEffect(() => {
-    if (!clients.some((client) => client.name === connected)) {
-      setConnected(null);
-    }
-  }, [clients, connected, setConnected]);
-
-  useEffect(() => {
-    const storedRoverName = localStorage.getItem("roverName");
-
-    if (storedRoverName && clients.length > 0) {
-      const roverToConnect = clients.find(
-        (client) => client.name === storedRoverName
-      );
-
-      if (roverToConnect) {
-        setConnected(roverToConnect.name);
-        setSecrets((prevSecrets) => ({
-          ...prevSecrets,
-          [roverToConnect.name]: roverToConnect.secret || "", // Pre-fill secret if available
-        }));
-      }
-    }
-  }, [clients, setConnected]); // This useEffect runs when clients change or the component mounts
-
+const ConnectedClients = ({
+  setConnected,
+  connected,
+  ws,
+  clients,
+  secrets,
+}) => {
   const handleConnect = (client) => {
     if (connected === client.name) {
       console.log(`Disconnecting from ${client.name}`);

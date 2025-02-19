@@ -1,17 +1,10 @@
 import React, { useRef, useEffect } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Html, Line } from "@react-three/drei";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import * as THREE from "three";
 import rover from "../assets/rover.stl";
-import { Html } from "@react-three/drei";
 import terrain from "../assets/Apollo_16.stl";
-import {
-  CSS2DRenderer,
-  CSS2DObject,
-} from "three/addons/renderers/CSS2DRenderer.js";
-
-import { Line } from "@react-three/drei";
 
 const AxisLines = () => {
   return (
@@ -24,9 +17,7 @@ const AxisLines = () => {
         color="red"
         lineWidth={2}
         onUpdate={(self) => {
-          if (self.material) {
-            self.material.depthTest = false;
-          }
+          if (self.material) self.material.depthTest = false;
         }}
       />
       <Line
@@ -37,9 +28,7 @@ const AxisLines = () => {
         color="green"
         lineWidth={2}
         onUpdate={(self) => {
-          if (self.material) {
-            self.material.depthTest = false;
-          }
+          if (self.material) self.material.depthTest = false;
         }}
       />
       <Line
@@ -50,29 +39,22 @@ const AxisLines = () => {
         color="blue"
         lineWidth={2}
         onUpdate={(self) => {
-          if (self.material) {
-            self.material.depthTest = false;
-          }
+          if (self.material) self.material.depthTest = false;
         }}
       />
     </>
   );
 };
 
-// STL Model Loader Component
 const STLModel = ({ url }) => {
   const geometry = useLoader(STLLoader, url);
-  if (geometry) {
-    // Recompute normals to fix lighting issues
-    geometry.computeVertexNormals();
-  }
+  if (geometry) geometry.computeVertexNormals();
   const meshRef = useRef();
 
   useEffect(() => {
     if (meshRef.current) {
       meshRef.current.rotation.x = -Math.PI / 2;
       meshRef.current.position.y = 15;
-      // Enable casting and receiving shadows
       meshRef.current.receiveShadow = true;
     }
   }, [geometry]);
@@ -84,25 +66,60 @@ const STLModel = ({ url }) => {
   );
 };
 
-const STLModel2 = ({ url, text }) => {
-  const geometry = useLoader(STLLoader, url);
-  if (geometry) {
-    // Recompute normals to fix lighting issues
-    geometry.computeVertexNormals();
-  }
+const STLModel2 = ({ url, text, ws }) => {
+  // Internal ref for the mesh and target quaternion.
   const meshRef = useRef();
+  const targetQuaternion = useRef(new THREE.Quaternion());
 
+  const geometry = useLoader(STLLoader, url);
+  if (geometry) geometry.computeVertexNormals();
+
+  // Initialize model transform
   useEffect(() => {
     if (meshRef.current) {
       meshRef.current.rotation.x = -Math.PI / 2;
-      meshRef.current.position.y = 26;
-      meshRef.current.position.x = -33;
-      meshRef.current.position.z = 20;
-      // Enable casting and receiving shadows
+      meshRef.current.position.set(-33, 26, 20);
       meshRef.current.receiveShadow = true;
-      meshRef.current.scale.set(0.06, 0.06, 0.06); // Adjust the scale values as needed
+      meshRef.current.scale.set(0.06, 0.06, 0.06);
+      // Initialize target quaternion to current
+      targetQuaternion.current.copy(meshRef.current.quaternion);
     }
   }, [geometry]);
+
+  // interpolate quaternion
+  useFrame((state, delta) => {
+    if (meshRef.current) {
+      // slower is smoother
+      const smoothFactor = 3 * delta;
+      meshRef.current.quaternion.slerp(targetQuaternion.current, smoothFactor);
+    }
+  });
+
+  useEffect(() => {
+    if (!ws) return;
+
+    const handleIMUMessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "IMU") {
+          // Convert from degrees to radians.
+          const pitch = THREE.MathUtils.degToRad(data.pitch);
+          const roll = THREE.MathUtils.degToRad(-data.roll - 90);
+          const yaw = THREE.MathUtils.degToRad(-data.yaw);
+          const euler = new THREE.Euler(roll, pitch, 0, "XYZ");
+          // Compute target quaternion from Euler angles.
+          targetQuaternion.current.setFromEuler(euler);
+        }
+      } catch (err) {
+        console.error("Error parsing IMU message:", err);
+      }
+    };
+
+    ws.addEventListener("message", handleIMUMessage);
+    return () => {
+      ws.removeEventListener("message", handleIMUMessage);
+    };
+  }, [ws]);
 
   return (
     <mesh ref={meshRef} geometry={geometry}>
@@ -116,14 +133,11 @@ const STLModel2 = ({ url, text }) => {
   );
 };
 
-const Rover = ({ connected }) => {
+const Rover = ({ connected, ws }) => {
   return (
     <>
       <Canvas shadows camera={{ position: [-130, 110, 100], fov: 20 }}>
-        {/* Ambient Light */}
         <ambientLight intensity={0.4} />
-
-        {/* Directional Light with shadow */}
         <directionalLight
           position={[100, 5, 200]}
           castShadow
@@ -138,7 +152,7 @@ const Rover = ({ connected }) => {
         />
         <STLModel url={terrain} />
         <group>
-          <STLModel2 url={rover} text={connected} />
+          <STLModel2 ws={ws} url={rover} text={connected} />
           <group position={[-31, 30, 20]}>
             <AxisLines />
           </group>

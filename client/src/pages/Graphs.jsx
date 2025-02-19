@@ -32,7 +32,7 @@ const Graphs = () => {
           <EulerGraph connected={connected} ws={ws} />
         </div>
         <div className="graph2Container">
-          <Rover connected={connected} />
+          <Rover connected={connected} ws={ws} />
         </div>
         <div className="graph3Container">
           <RealtimeGraph name="Latency" />
