@@ -45,6 +45,8 @@ static unsigned long currentDelay = 1000;
 
 unsigned long lastConnectionCheck = 0;
 const unsigned long connectionCheckInterval = 5000; // 5 seconds
+unsigned long lastMpuUpdate = 0;
+const unsigned long mpuUpdateInterval = 200;
 
 void setup()
 {
@@ -173,39 +175,31 @@ void loop()
         }
     }
 
-  // using two independent counters because if the mpu isnt sampled frequently 
-  // enough, it will be noisy, yet I dont want to send data too often.
-  if (mpu.update())
-  {
-    if (count % 10 == 0)
-    {   
-      float yaw = mpu.getYaw();
-      float pitch = mpu.getPitch();
-      float roll = mpu.getRoll();
-      if (count2 % 25 == 0)
-      {
-        DynamicJsonDocument jsonDoc(256);
+    // TODO
+    // need to use a non-blocking MPU9250 library, as the current implementation will throw off the timing and speed of the stepper motors
+    // if (mpu.update()) {
+    //   static uint32_t prev_ms_imu = millis();
+    //   if (millis() > prev_ms_imu + 200) {
+    //     float yaw = mpu.getYaw();
+    //     float pitch = mpu.getPitch();
+    //     float roll = mpu.getRoll();
+    //     DynamicJsonDocument jsonDoc(256);
 
-        jsonDoc["type"] = "IMU";
-        jsonDoc["url"] = url;
-        jsonDoc["yaw"] = yaw;
-        jsonDoc["pitch"] = pitch;
-        jsonDoc["roll"] = roll;
+    //     jsonDoc["type"] = "IMU";
+    //     jsonDoc["url"] = url;
+    //     jsonDoc["yaw"] = yaw;
+    //     jsonDoc["pitch"] = pitch;
+    //     jsonDoc["roll"] = roll;
 
-        String jsonString;  
-        serializeJson(jsonDoc, jsonString); 
-        // Serial.println("sent: " + jsonString);
-        ws.sendTXT(jsonString); 
-        count2 = 0;
-      }
-     
-      
-      
-       count = 0;
-    }
-  count++;
-   count2++;
-  }
+    //     String jsonString;
+    //     serializeJson(jsonDoc, jsonString);
+    //     Serial.println("sent: ");
+    //     Serial.println(jsonString);
+    //     ws.sendTXT(jsonString);
+
+    //     prev_ms_imu = millis();
+    //   }
+    // }
 }
 
 void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
