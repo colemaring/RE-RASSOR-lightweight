@@ -7,7 +7,7 @@
 #include <MPU9250.h>
 
 const char *ssid = "ExolithLab";
-const char *password = "SpaceDust";
+const char *password = "";
 const char *host = "rerassor.com";
 const uint16_t port = 8080;
 const char *url = "/?name=testrover&secret=123";
