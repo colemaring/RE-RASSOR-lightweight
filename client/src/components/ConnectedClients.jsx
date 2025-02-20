@@ -9,6 +9,7 @@ const ConnectedClients = ({
   ws,
   clients,
   secrets,
+  setSecrets,
 }) => {
   const handleConnect = (client) => {
     if (connected === client.name) {

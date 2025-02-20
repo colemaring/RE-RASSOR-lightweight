@@ -106,7 +106,7 @@ export const WebSocketsProvider = ({ children }) => {
 
   return (
     <WebSocketsContext.Provider
-      value={{ connected, setConnected, ws, clients, secrets }}
+      value={{ connected, setConnected, ws, clients, secrets, setSecrets }}
     >
       {children}
     </WebSocketsContext.Provider>
