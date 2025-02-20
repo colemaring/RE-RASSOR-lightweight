@@ -7,7 +7,7 @@
 #include <MPU9250.h>
 
 const char *ssid = "ExolithLab";
-const char *password = "";
+const char *password = "SpaceDust";
 const char *host = "rerassor.com";
 const uint16_t port = 8080;
 const char *url = "/?name=testrover&secret=123";
@@ -151,26 +151,10 @@ void loop()
     {
         if (!initialized)
         {
-            currentDelay = 1000;
             initialized = true;
         }
 
-        // Calculate the target delay based on the speedMultiplier
-        unsigned long targetDelay = 100 * (10 - pow(speedVal, 2));
-
-        if (speedVal == 0.2)
-          targetDelay = 3000;
-          
-        // Accelerate to the target speed
-        if (currentDelay > targetDelay) {
-            currentDelay -= 1;
-            if (currentDelay < targetDelay)
-                currentDelay = targetDelay;
-        } else if (currentDelay < targetDelay) {
-            currentDelay += 1;
-            if (currentDelay > targetDelay)
-                currentDelay = targetDelay;
-        }
+        currentDelay = 3000 / (speedVal * 10);
 
         // Rotate motors
         digitalWrite(stepPinFrontLeft, !digitalRead(stepPinFrontLeft));
