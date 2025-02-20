@@ -19,8 +19,8 @@ function SpeedSlider({ connected, ws }) {
       <Form.Range
         disabled={!connected}
         value={speed}
-        min={0.2}
-        max={3}
+        min={0.1}
+        max={10}
         step={0.1}
         onChange={handleSpeedChange}
         style={{ width: "200px", margin: "0 auto" }} // Center the slider
