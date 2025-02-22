@@ -36,9 +36,6 @@ function MyNavbar() {
             <Nav.Link as={Link} to="/resources">
               Resources
             </Nav.Link>
-            <Nav.Link as={Link} to="/media">
-              Media
-            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
         <span className="me-4">

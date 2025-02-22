@@ -22,6 +22,9 @@ import boardwired from "../assets/boardwired.jpg";
 import boardplain from "../assets/boardplain.jpg";
 import PCBscreenshot from "../assets/PCBscreenshot.png";
 import boardtogether from "../assets/boardtogether.jpg";
+import pcbv2 from "../assets/pcbv2.png";
+import completerassorv2 from "../assets/completerassorv2.png";
+import electronicswiringv2 from "../assets/electronicswiringv2.png";
 
 function Media() {
   return (
@@ -171,6 +174,24 @@ function Media() {
         src={boardtogether}
         alt={"PCB board installed"}
         title={"PCB board installed"}
+        style={{ width: "400px", height: "auto", marginBottom: "1rem" }}
+      />
+      <img
+        src={pcbv2}
+        alt={"Second iteration of the PCB"}
+        title={"PCB board v2"}
+        style={{ width: "400px", height: "auto", marginBottom: "1rem" }}
+      />
+      <img
+        src={completerassorv2}
+        alt={"V2 of completed rover"}
+        title={"Rover with PCB board v2"}
+        style={{ width: "400px", height: "auto", marginBottom: "1rem" }}
+      />
+      <img
+        src={electronicswiringv2}
+        alt={"High level electronics wiring, much cleaner"}
+        title={"Close up of wiring on rover with PCB board v2"}
         style={{ width: "400px", height: "auto", marginBottom: "1rem" }}
       />
     </>
