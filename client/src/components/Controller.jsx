@@ -32,25 +32,93 @@ function Controller({ connected, ws }) {
     );
   };
 
+  const handleForwardLeft = () => {
+    ws.send(
+      JSON.stringify({
+        rover: connected,
+        type: "move",
+        direction: "forwardLeft",
+      })
+    );
+  };
+
+  const handleForwardRight = () => {
+    ws.send(
+      JSON.stringify({
+        rover: connected,
+        type: "move",
+        direction: "forwardRight",
+      })
+    );
+  };
+
+  const handleBackwardLeft = () => {
+    ws.send(
+      JSON.stringify({
+        rover: connected,
+        type: "move",
+        direction: "backwardLeft",
+      })
+    );
+  };
+
+  const handleBackwardRight = () => {
+    ws.send(
+      JSON.stringify({
+        rover: connected,
+        type: "move",
+        direction: "backwardRight",
+      })
+    );
+  };
+
   return (
     <div className="controller">
-      <Button onClick={handleForward} disabled={!connected}>
-        Forward <i className="fa-solid fa-arrow-up"></i>
-      </Button>
       <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
-        <Button onClick={handleLeft} disabled={!connected}>
-          Left <i className="fa-solid fa-arrow-left"></i>
+        <Button onClick={handleForwardLeft} disabled={!connected}>
+          <i
+            className="fa-solid fa-arrow-up"
+            style={{ transform: "rotate(-45deg)" }}
+          ></i>
         </Button>
-        <Button onClick={handleStop} disabled={!connected} variant="danger">
-          Stop <i className="fa-solid fa-stop"></i>
+        <Button onClick={handleForward} disabled={!connected}>
+          <i className="fa-solid fa-arrow-up"></i>
         </Button>
-        <Button onClick={handleRight} disabled={!connected}>
-          Right <i className="fa-solid fa-arrow-right"></i>
+        <Button onClick={handleForwardRight} disabled={!connected}>
+          <i
+            className="fa-solid fa-arrow-up"
+            style={{ transform: "rotate(45deg)" }}
+          ></i>
         </Button>
       </div>
-      <Button onClick={handleBackward} disabled={!connected}>
-        Backward <i className="fa-solid fa-arrow-down"></i>
-      </Button>
+      <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+        <Button onClick={handleLeft} disabled={!connected}>
+          <i className="fa-solid fa-arrow-left"></i>
+        </Button>
+        <Button onClick={handleStop} disabled={!connected} variant="danger">
+          <i className="fa-solid fa-stop"></i>
+        </Button>
+        <Button onClick={handleRight} disabled={!connected}>
+          <i className="fa-solid fa-arrow-right"></i>
+        </Button>
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+        <Button onClick={handleBackwardLeft} disabled={!connected}>
+          <i
+            className="fa-solid fa-arrow-down"
+            style={{ transform: "rotate(45deg)" }}
+          ></i>
+        </Button>
+        <Button onClick={handleBackward} disabled={!connected}>
+          <i className="fa-solid fa-arrow-down"></i>
+        </Button>
+        <Button onClick={handleBackwardRight} disabled={!connected}>
+          <i
+            className="fa-solid fa-arrow-down"
+            style={{ transform: "rotate(-45deg)" }}
+          ></i>
+        </Button>
+      </div>
     </div>
   );
 }
