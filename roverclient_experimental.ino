@@ -7,7 +7,7 @@
 #include <MPU9250.h>
 
 const char *ssid = "ExolithLab";
-const char *password = "SpaceDust";
+const char *password = "";
 const char *host = "rerassor.com";
 const uint16_t port = 8080;
 const char *url = "/?name=testrover&secret=123";
@@ -157,7 +157,7 @@ void loop() {
 
   if (motorRunning) {
     // When turning, apply different speeds to left/right motors.
-    if (direction == "left") {
+    if (direction == "forwardLeft") {
     // Turning LEFT: Right side full speed, Left side half speed.
       if (currentMicros - lastRightStep >= fullSpeedDelay) {
           // Right side motors (front and rear) step at full speed.
@@ -173,7 +173,40 @@ void loop() {
           lastLeftStep = currentMicros;
       }
     }
-    else if (direction == "right") {
+    else if (direction == "forwardRight") {
+      // Turning RIGHT: Left side full speed, Right side half speed.
+      if (currentMicros - lastLeftStep >= fullSpeedDelay) {
+          // Left side motors (front and rear) step at full speed.
+          digitalWrite(stepPinFrontLeft, !digitalRead(stepPinFrontLeft));
+          digitalWrite(stepPinRearLeft, !digitalRead(stepPinRearLeft));
+          lastLeftStep = currentMicros;
+      }
+
+      if (currentMicros - lastRightStep >= halfSpeedDelay) {
+          // Right side motors (front and rear) step at half speed.
+          digitalWrite(stepPinFrontRight, !digitalRead(stepPinFrontRight));
+          digitalWrite(stepPinRearRight, !digitalRead(stepPinRearRight));
+          lastRightStep = currentMicros;
+      }
+    }
+
+    else if (direction == "backwardRight") {
+    // Turning LEFT: Right side full speed, Left side half speed.
+      if (currentMicros - lastRightStep >= fullSpeedDelay) {
+          // Right side motors (front and rear) step at full speed.
+          digitalWrite(stepPinFrontRight, !digitalRead(stepPinFrontRight));
+          digitalWrite(stepPinRearRight, !digitalRead(stepPinRearRight));
+          lastRightStep = currentMicros;
+      }
+
+      if (currentMicros - lastLeftStep >= halfSpeedDelay) {
+          // Left side motors (front and rear) step at half speed.
+          digitalWrite(stepPinFrontLeft, !digitalRead(stepPinFrontLeft));
+          digitalWrite(stepPinRearLeft, !digitalRead(stepPinRearLeft));
+          lastLeftStep = currentMicros;
+      }
+    }
+    else if (direction == "backwardLeft") {
       // Turning RIGHT: Left side full speed, Right side half speed.
       if (currentMicros - lastLeftStep >= fullSpeedDelay) {
           // Left side motors (front and rear) step at full speed.
@@ -190,7 +223,7 @@ void loop() {
       }
     }
     // When moving forward or backward, all motors step together.
-    else if (direction == "forward" || direction == "backward") {
+    else if (direction == "forward" || direction == "backward" || direction == "left" || direction == "right") {
       if (currentMicros - lastAllStep >= fullSpeedDelay) {
         digitalWrite(stepPinFrontRight, !digitalRead(stepPinFrontRight));
         digitalWrite(stepPinRearRight, !digitalRead(stepPinRearRight));
@@ -252,7 +285,7 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
             direction = jsonDoc["direction"].as<String>();
             Serial.print("parsed " + direction);
 
-            if (direction == "forward" || direction == "backward" || direction == "left" || direction == "right")
+            if (direction == "forward" || direction == "backward" || direction == "left" || direction == "right" || direction == "forwardLeft" || direction == "forwardRight" || direction == "backwardLeft" || direction == "backwardRight") 
             {
                 digitalWrite(EN_PIN1, LOW); // Enable driver
                 digitalWrite(EN_PIN2, LOW); // Enable driver
@@ -277,7 +310,7 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
                 motorRunning = true;
             }
             
-            else if (direction == "left")
+            else if (direction == "forwardLeft")
             {
                 digitalWrite(dirPinFrontLeft, false);
                 digitalWrite(dirPinFrontRight, true);
@@ -285,12 +318,44 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
                 digitalWrite(dirPinRearRight, true);
                 motorRunning = true;
             }
-            else if (direction == "right")
+            else if (direction == "forwardRight")
             {
                 digitalWrite(dirPinFrontLeft, false);
                 digitalWrite(dirPinFrontRight, true);
                 digitalWrite(dirPinRearLeft, false);
                 digitalWrite(dirPinRearRight, true);
+                motorRunning = true;
+            }
+            else if (direction == "backwardLeft")
+            {
+                digitalWrite(dirPinFrontLeft, true);
+                digitalWrite(dirPinFrontRight, false);
+                digitalWrite(dirPinRearLeft, true);
+                digitalWrite(dirPinRearRight, false);
+                motorRunning = true;
+            }
+            else if (direction == "backwardRight")
+            {
+                digitalWrite(dirPinFrontLeft, true);
+                digitalWrite(dirPinFrontRight, false);
+                digitalWrite(dirPinRearLeft, true);
+                digitalWrite(dirPinRearRight, false);
+                motorRunning = true;
+            }
+            else if (direction == "left")
+            {
+                digitalWrite(dirPinFrontLeft, true);
+                digitalWrite(dirPinFrontRight, true);
+                digitalWrite(dirPinRearLeft, true);
+                digitalWrite(dirPinRearRight, true);
+                motorRunning = true;
+            }
+            else if (direction == "right")
+            {
+                digitalWrite(dirPinFrontLeft, false);
+                digitalWrite(dirPinFrontRight, false);
+                digitalWrite(dirPinRearLeft, false);
+                digitalWrite(dirPinRearRight, false);
                 motorRunning = true;
             }
             else if (direction == "stop")
