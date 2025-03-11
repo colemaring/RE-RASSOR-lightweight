@@ -16,6 +16,7 @@ const char *protocol = "ws";
 MPU9250 mpu;
 WiFiClient client;
 WebSocketsClient ws;
+String direction;
 
 // stepper motor pins
 #define dirPinFrontLeft 32
@@ -26,10 +27,10 @@ WebSocketsClient ws;
 #define stepPinRearLeft 12
 #define dirPinRearRight 16
 #define stepPinRearRight 4
-#define EN_PIN1 33 // LOW: Driver enabled. HIGH: Driver disabled
-#define EN_PIN2 27 // LOW: Driver enabled. HIGH: Driver disabled
-#define EN_PIN3 14 // LOW: Driver enabled. HIGH: Driver disabled
-#define EN_PIN4 5 // LOW: Driver enabled. HIGH: Driver disabled
+#define EN_PIN1 33 // LOW: Driver enabled. HIGH: Driver disabled | front left
+#define EN_PIN2 27 // LOW: Driver enabled. HIGH: Driver disabled | front right
+#define EN_PIN3 14 // LOW: Driver enabled. HIGH: Driver disabled | rear left
+#define EN_PIN4 5 //  LOW: Driver enabled. HIGH: Driver disabled | rear right
 #define motorInterfaceType 1
 
 TMC2208Stepper driver1 = TMC2208Stepper(&Serial1);
@@ -46,7 +47,7 @@ static unsigned long currentDelay = 1000;
 unsigned long lastConnectionCheck = 0;
 const unsigned long connectionCheckInterval = 5000; // 5 seconds
 unsigned long lastMpuUpdate = 0;
-const unsigned long mpuUpdateInterval = 200;
+const unsigned long mpuUpdateInterval = 200000;
 
 void setup()
 {
@@ -141,65 +142,122 @@ void setup()
     ws.begin(host, port, url, protocol);
     ws.onEvent(onWsEvent);
 }
+unsigned long lastLeftStep = 0;
+unsigned long lastRightStep = 0;
+unsigned long lastAllStep = 0;
 
-int count = 0;
-int count2 = 0;
+void loop() {
+  ws.loop();
 
-void loop()
-{
-    ws.loop();
+  // Get current time in microseconds
+  unsigned long currentMicros = micros();
+  // Calculate base delay for full-speed stepping (adjust formula as needed)
+  int fullSpeedDelay = 3000 / (speedVal * 10);  // delay in microseconds
+  int halfSpeedDelay = fullSpeedDelay * 2;
 
-    if (motorRunning)
-    {
-        if (!initialized)
-        {
-            initialized = true;
-        }
+  if (motorRunning) {
+    // When turning, apply different speeds to left/right motors.
+    if (direction == "forwardLeft") {
+    // Turning LEFT: Right side full speed, Left side half speed.
+      if (currentMicros - lastRightStep >= fullSpeedDelay) {
+          // Right side motors (front and rear) step at full speed.
+          digitalWrite(stepPinFrontRight, !digitalRead(stepPinFrontRight));
+          digitalWrite(stepPinRearRight, !digitalRead(stepPinRearRight));
+          lastRightStep = currentMicros;
+      }
 
-        currentDelay = 3000 / (speedVal * 10);
+      if (currentMicros - lastLeftStep >= halfSpeedDelay) {
+          // Left side motors (front and rear) step at half speed.
+          digitalWrite(stepPinFrontLeft, !digitalRead(stepPinFrontLeft));
+          digitalWrite(stepPinRearLeft, !digitalRead(stepPinRearLeft));
+          lastLeftStep = currentMicros;
+      }
+    }
+    else if (direction == "forwardRight") {
+      // Turning RIGHT: Left side full speed, Right side half speed.
+      if (currentMicros - lastLeftStep >= fullSpeedDelay) {
+          // Left side motors (front and rear) step at full speed.
+          digitalWrite(stepPinFrontLeft, !digitalRead(stepPinFrontLeft));
+          digitalWrite(stepPinRearLeft, !digitalRead(stepPinRearLeft));
+          lastLeftStep = currentMicros;
+      }
 
-        // Rotate motors
-        digitalWrite(stepPinFrontLeft, !digitalRead(stepPinFrontLeft));
+      if (currentMicros - lastRightStep >= halfSpeedDelay) {
+          // Right side motors (front and rear) step at half speed.
+          digitalWrite(stepPinFrontRight, !digitalRead(stepPinFrontRight));
+          digitalWrite(stepPinRearRight, !digitalRead(stepPinRearRight));
+          lastRightStep = currentMicros;
+      }
+    }
+
+    else if (direction == "backwardRight") {
+    // Turning LEFT: Right side full speed, Left side half speed.
+      if (currentMicros - lastRightStep >= halfSpeedDelay) {
+          // Right side motors (front and rear) step at full speed.
+          digitalWrite(stepPinFrontRight, !digitalRead(stepPinFrontRight));
+          digitalWrite(stepPinRearRight, !digitalRead(stepPinRearRight));
+          lastRightStep = currentMicros;
+      }
+
+      if (currentMicros - lastLeftStep >= fullSpeedDelay) {
+          // Left side motors (front and rear) step at half speed.
+          digitalWrite(stepPinFrontLeft, !digitalRead(stepPinFrontLeft));
+          digitalWrite(stepPinRearLeft, !digitalRead(stepPinRearLeft));
+          lastLeftStep = currentMicros;
+      }
+    }
+    else if (direction == "backwardLeft") {
+      // Turning RIGHT: Left side full speed, Right side half speed.
+      if (currentMicros - lastLeftStep >= halfSpeedDelay) {
+          // Left side motors (front and rear) step at full speed.
+          digitalWrite(stepPinFrontLeft, !digitalRead(stepPinFrontLeft));
+          digitalWrite(stepPinRearLeft, !digitalRead(stepPinRearLeft));
+          lastLeftStep = currentMicros;
+      }
+
+      if (currentMicros - lastRightStep >= fullSpeedDelay) {
+          // Right side motors (front and rear) step at half speed.
+          digitalWrite(stepPinFrontRight, !digitalRead(stepPinFrontRight));
+          digitalWrite(stepPinRearRight, !digitalRead(stepPinRearRight));
+          lastRightStep = currentMicros;
+      }
+    }
+    // When moving forward or backward, all motors step together.
+    else if (direction == "forward" || direction == "backward" || direction == "left" || direction == "right") {
+      if (currentMicros - lastAllStep >= fullSpeedDelay) {
         digitalWrite(stepPinFrontRight, !digitalRead(stepPinFrontRight));
-        digitalWrite(stepPinRearLeft, !digitalRead(stepPinRearLeft));
         digitalWrite(stepPinRearRight, !digitalRead(stepPinRearRight));
-        delayMicroseconds(currentDelay);
+        digitalWrite(stepPinFrontLeft, !digitalRead(stepPinFrontLeft));
+        digitalWrite(stepPinRearLeft, !digitalRead(stepPinRearLeft));
+        lastAllStep = currentMicros;
+      }
     }
-    if (millis() - lastConnectionCheck >= connectionCheckInterval)
-    {
-        lastConnectionCheck = millis();
-        if (!ws.isConnected())
-        {
-            Serial.println("Connection lost, attempting to reconnect...");
-            ws.begin(host, port, url, protocol);
-        }
-    }
+  }
 
-    // TODO
-    // need to use a non-blocking MPU9250 library, as the current implementation will throw off the timing and speed of the stepper motors
-    // if (mpu.update()) {
-    //   static uint32_t prev_ms_imu = millis();
-    //   if (millis() > prev_ms_imu + 200) {
-    //     float yaw = mpu.getYaw();
-    //     float pitch = mpu.getPitch();
-    //     float roll = mpu.getRoll();
-    //     DynamicJsonDocument jsonDoc(256);
+  currentMicros = micros();
+  if (currentMicros - lastMpuUpdate >= mpuUpdateInterval)
+  {
+      if (mpu.update()) 
+      {
+          float yaw = mpu.getYaw();
+          float pitch = mpu.getPitch();
+          float roll = mpu.getRoll();
+          DynamicJsonDocument jsonDoc(256);
 
-    //     jsonDoc["type"] = "IMU";
-    //     jsonDoc["url"] = url;
-    //     jsonDoc["yaw"] = yaw;
-    //     jsonDoc["pitch"] = pitch;
-    //     jsonDoc["roll"] = roll;
+          jsonDoc["type"] = "IMU";
+          jsonDoc["url"] = url;
+          jsonDoc["yaw"] = yaw;
+          jsonDoc["pitch"] = pitch;
+          jsonDoc["roll"] = roll;
 
-    //     String jsonString;
-    //     serializeJson(jsonDoc, jsonString);
-    //     Serial.println("sent: ");
-    //     Serial.println(jsonString);
-    //     ws.sendTXT(jsonString);
-
-    //     prev_ms_imu = millis();
-    //   }
-    // }
+          String jsonString;
+          serializeJson(jsonDoc, jsonString);
+          Serial.println("sent: ");
+          Serial.println(jsonString);
+          ws.sendTXT(jsonString);
+      }
+      lastMpuUpdate = currentMicros;
+  }
 }
 
 void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
@@ -223,20 +281,20 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
 
         if (jsonDoc.containsKey("type") && jsonDoc["type"] == "move")
         {
-            String direction = jsonDoc["direction"];
+            direction = jsonDoc["direction"].as<String>();
             Serial.print("parsed " + direction);
 
-            if (direction == "forward" || direction == "backward" || direction == "left" || direction == "right")
+            if (direction == "forward" || direction == "backward" || direction == "left" || direction == "right" || direction == "forwardLeft" || direction == "forwardRight" || direction == "backwardLeft" || direction == "backwardRight") 
             {
-                digitalWrite(EN_PIN1, LOW); // Enable driver 1
-                digitalWrite(EN_PIN2, LOW); // Enable driver 2
-                digitalWrite(EN_PIN3, LOW); // Enable driver 3
-                digitalWrite(EN_PIN4, LOW); // Enable driver 4
+                digitalWrite(EN_PIN1, LOW); // Enable driver
+                digitalWrite(EN_PIN2, LOW); // Enable driver
+                digitalWrite(EN_PIN3, LOW); // Enable driver
+                digitalWrite(EN_PIN4, LOW); // Enable driver
             }
 
             if (direction == "forward")
             {
-                digitalWrite(dirPinFrontLeft, false); // Set direction
+                digitalWrite(dirPinFrontLeft, false);
                 digitalWrite(dirPinFrontRight, true);
                 digitalWrite(dirPinRearLeft, false);
                 digitalWrite(dirPinRearRight, true);
@@ -244,7 +302,40 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
             }
             else if (direction == "backward")
             {
-                digitalWrite(dirPinFrontLeft, true); // Set direction
+                digitalWrite(dirPinFrontLeft, true);
+                digitalWrite(dirPinFrontRight, false);
+                digitalWrite(dirPinRearLeft, true);
+                digitalWrite(dirPinRearRight, false);
+                motorRunning = true;
+            }
+            
+            else if (direction == "forwardLeft")
+            {
+                digitalWrite(dirPinFrontLeft, false);
+                digitalWrite(dirPinFrontRight, true);
+                digitalWrite(dirPinRearLeft, false);
+                digitalWrite(dirPinRearRight, true);
+                motorRunning = true;
+            }
+            else if (direction == "forwardRight")
+            {
+                digitalWrite(dirPinFrontLeft, false);
+                digitalWrite(dirPinFrontRight, true);
+                digitalWrite(dirPinRearLeft, false);
+                digitalWrite(dirPinRearRight, true);
+                motorRunning = true;
+            }
+            else if (direction == "backwardLeft")
+            {
+                digitalWrite(dirPinFrontLeft, true);
+                digitalWrite(dirPinFrontRight, false);
+                digitalWrite(dirPinRearLeft, true);
+                digitalWrite(dirPinRearRight, false);
+                motorRunning = true;
+            }
+            else if (direction == "backwardRight")
+            {
+                digitalWrite(dirPinFrontLeft, true);
                 digitalWrite(dirPinFrontRight, false);
                 digitalWrite(dirPinRearLeft, true);
                 digitalWrite(dirPinRearRight, false);
@@ -252,7 +343,7 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
             }
             else if (direction == "left")
             {
-                digitalWrite(dirPinFrontLeft, true); // Set direction
+                digitalWrite(dirPinFrontLeft, true);
                 digitalWrite(dirPinFrontRight, true);
                 digitalWrite(dirPinRearLeft, true);
                 digitalWrite(dirPinRearRight, true);
@@ -260,7 +351,7 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
             }
             else if (direction == "right")
             {
-                digitalWrite(dirPinFrontLeft, false); // Set direction
+                digitalWrite(dirPinFrontLeft, false);
                 digitalWrite(dirPinFrontRight, false);
                 digitalWrite(dirPinRearLeft, false);
                 digitalWrite(dirPinRearRight, false);
@@ -270,10 +361,10 @@ void onWsEvent(WStype_t type, uint8_t *payload, size_t length)
             {
                 motorRunning = false;
                 initialized = false;
-                digitalWrite(EN_PIN1, HIGH); // Disable driver 1
-                digitalWrite(EN_PIN2, HIGH); // Disable driver 2
-                digitalWrite(EN_PIN3, HIGH); // Disable driver 3
-                digitalWrite(EN_PIN4, HIGH); // Disable driver 4
+                digitalWrite(EN_PIN1, HIGH); // Disable driver
+                digitalWrite(EN_PIN2, HIGH); // Disable driver
+                digitalWrite(EN_PIN3, HIGH); // Disable driver
+                digitalWrite(EN_PIN4, HIGH); // Disable driver
             }
         }
 
