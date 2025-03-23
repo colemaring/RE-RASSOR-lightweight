@@ -92,15 +92,15 @@ function Controller({ connected, ws }) {
         </Button>
       </div>
       <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
-        <Button onClick={handleLeft} disabled={!connected}>
+        {/* <Button onClick={handleLeft} disabled={!connected}>
           <i className="fa-solid fa-arrow-left"></i>
-        </Button>
+        </Button> */}
         <Button onClick={handleStop} disabled={!connected} variant="danger">
           <i className="fa-solid fa-stop"></i>
         </Button>
-        <Button onClick={handleRight} disabled={!connected}>
+        {/* <Button onClick={handleRight} disabled={!connected}>
           <i className="fa-solid fa-arrow-right"></i>
-        </Button>
+        </Button> */}
       </div>
       <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
         <Button onClick={handleBackwardLeft} disabled={!connected}>
