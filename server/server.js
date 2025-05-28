@@ -13,7 +13,7 @@ const SSLkey = process.env.SSL_KEY;
 const SSLcert = process.env.SSL_CERT;
 const SSLkeypath = process.env.SSL_KEYPATH;
 const SSLcertpath = process.env.SSL_CERTPATH;
-// const rtsp_url_bin = process.env.RTSP_URL_BIN; test
+// const rtsp_url_bin = process.env.RTSP_URL_BIN; renew cert diff 
 
 let httpsServer, httpServer, options;
 
